@@ -2,20 +2,15 @@
 
     <div class="row">
         <?php echo $form->label($node,'name') ?>
-        <span class="uneditable-input"><?php echo CHtml::encode($node->name) ?></span>
+        <span class="uneditable-input"><?php echo CHtml::encode($node->name) ?></span><br />
+		<span class="hint"><?php echo Yii::t('CmsModule.core','Node name cannot be changed.') ?></span>
     </div>
 
-    <div class="row">
-        <?php echo $form->labelEx($model,'['.$model->locale.']url') ?>
-        <?php echo $form->textField($model,'['.$model->locale.']url') ?>
-        <?php echo $form->error($model,'['.$model->locale.']url') ?>
-    </div>
-
-    <div class="row">
-        <?php echo $form->labelEx($model,'['.$model->locale.']title') ?>
-        <?php echo $form->textField($model,'['.$model->locale.']title') ?>
-        <?php echo $form->error($model,'['.$model->locale.']title') ?>
-    </div>
+	<div class="row">
+		<?php echo $form->labelEx($model,'['.$model->locale.']heading') ?>
+		<?php echo $form->textField($model,'['.$model->locale.']heading') ?>
+		<?php echo $form->error($model,'['.$model->locale.']heading') ?>
+	</div>
 
     <div class="row">
         <?php echo $form->labelEx($model,'['.$model->locale.']body') ?>
@@ -29,9 +24,10 @@
 		<div class="tags">
 			<p><strong><?php echo Yii::t('CmsModule.core','Available tags'); ?></strong></p>
 			<ul>
-				<li><strong>{title}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','the page title'); ?></em></li>
-				<li><strong>{attachment:id}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','an attached file or image'); ?></em></li>
-				<li><strong>{node:name}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','an inline-node'); ?></em></li>
+				<li><strong>{heading}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','the page heading'); ?></em></li>
+				<li><strong>{image:id}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','displays an attached image'); ?></em></li>
+				<li><strong>{attachment:id}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','a link to an attached file'); ?></em></li>
+				<li><strong>{node:name}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','displays an inline-node'); ?></em></li>
 			</ul>
 		</div>
     </div>
@@ -46,7 +42,22 @@
 
 <fieldset>
 
-    <legend><?php echo Yii::t('CmsModule.core', 'Meta tags') ?></legend>
+    <legend><?php echo Yii::t('CmsModule.core', 'Page settings') ?></legend>
+
+	<p class="hint"><?php echo Yii::t('CmsModule.core','Please note that the fields below are only used with pages.') ?></p>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'['.$model->locale.']url') ?>
+		<?php echo $form->textField($model,'['.$model->locale.']url') ?>
+		<?php echo $form->error($model,'['.$model->locale.']url') ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'['.$model->locale.']pageTitle') ?>
+		<?php echo $form->textField($model,'['.$model->locale.']pageTitle') ?>
+		<?php echo $form->error($model,'['.$model->locale.']pageTitle') ?>
+	</div>
+
 
     <div class="row">
         <?php echo $form->labelEx($model,'['.$model->locale.']metaTitle') ?>
@@ -77,9 +88,8 @@
             'id'=>'attachments_'.$model->locale,
             'dataProvider'=>$model->getAttachments(),
             'template'=>'{items} {pager}',
-            'emptyText'=>Yii::t('CmsModule.core', 'No attachments found.'),
+            'emptyText'=>Yii::t('CmsModule.core','No attachments found.'),
             'showTableOnEmpty'=>false,
-            'hideHeader'=>true,
             'columns'=>array(
 				array(
 					'header'=>'#',

@@ -124,8 +124,12 @@ class NodeController extends CmsController
 			if (!empty($model->content->css))
 				$cs->registerCss($model->name, $model->content->css);
 
-            $this->pageTitle = $model->title.' | '.Yii::app()->name;
-            $this->breadcrumbs = array($model->title);
+            $this->pageTitle = strtr($app->cms->pageTitleTemplate, array(
+				'{title}'=>$model->pageTitle,
+				'{appName}'=>Yii::app()->name,
+			));
+
+            $this->breadcrumbs = array($model->heading);
 		}
 
 		$this->render('page', array(

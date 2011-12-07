@@ -52,11 +52,15 @@ class Cms extends CApplicationComponent
 	/**
 	 * @property string the template to use for node titles.
 	 */
-	public $titleTemplate = '<h1 class="title">{title}</h1>';
+	public $headingTemplate = '<h1 class="heading">{heading}</h1>';
 	/**
 	 * @property string the template to use for widgets node titles.
 	 */
-	public $widgetTitleTemplate = '<h3 class="title">{title}</h3>';
+	public $widgetHeadingTemplate = '<h3 class="heading">{heading}</h3>';
+	/**
+	 * @property string the template to use for page titles.
+	 */
+	public $pageTitleTemplate = '{title} | {appName}';
 
     protected $_assetsUrl;
 

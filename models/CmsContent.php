@@ -14,10 +14,11 @@
  * @property string $id
  * @property string $nodeId
  * @property string $locale
- * @property string $url
- * @property string $title
- * @property string $css
+ * @property string $heading
  * @property string $body
+ * @property string $css
+ * @property string $url
+ * @property string $pageTitle
  * @property string $metaTitle
  * @property string $metaDescription
  * @property string $metaKeywords
@@ -54,10 +55,10 @@ class CmsContent extends CmsActiveRecord
 			array('nodeId, locale', 'required'),
 			array('nodeId', 'length', 'max'=>10),
 			array('locale', 'length', 'max'=>50),
-			array('url, title, metaTitle, metaDescription, metaKeywords', 'length', 'max'=>255),
+			array('heading, url, pageTitle, metaTitle, metaDescription, metaKeywords', 'length', 'max'=>255),
 			array('attachment', 'file', 'types'=>Yii::app()->cms->allowedFileTypes, 'allowEmpty'=>true),
 			array('body, css', 'safe'),
-			array('id, nodeId, locale, url, title, metaTitle, metaDescription, metaKeywords', 'safe', 'on'=>'search'),
+			array('id, nodeId, locale, heading, url, pageTitle, metaTitle, metaDescription, metaKeywords', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,10 +71,11 @@ class CmsContent extends CmsActiveRecord
 			'id' => Yii::t('CmsModule.core', 'Id'),
 			'nodeId' => Yii::t('CmsModule.core', 'Node'),
 			'locale' => Yii::t('CmsModule.core', 'Locale'),
-			'url' => Yii::t('CmsModule.core', 'URL'),
-			'title' => Yii::t('CmsModule.core', 'Title'),
+			'heading' => Yii::t('CmsModule.core', 'Heading'),
 			'body' => Yii::t('CmsModule.core', 'Body'),
 			'css' => Yii::t('CmsModule.core', 'Stylesheet'),
+			'url' => Yii::t('CmsModule.core', 'URL'),
+			'pageTitle' => Yii::t('CmsModule.core', 'Page Title'),
 			'metaTitle' => Yii::t('CmsModule.core', 'Meta Title'),
 			'metaDescription' => Yii::t('CmsModule.core', 'Meta Description'),
 			'metaKeywords' => Yii::t('CmsModule.core', 'Meta Keywords'),
@@ -92,10 +94,11 @@ class CmsContent extends CmsActiveRecord
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('contentId',$this->nodeId,true);
 		$criteria->compare('locale',$this->locale,true);
-		$criteria->compare('url',$this->url,true);
-		$criteria->compare('title',$this->title,true);
+		$criteria->compare('heading',$this->heading,true);
 		$criteria->compare('body',$this->body,true);
 		$criteria->compare('css',$this->css,true);
+		$criteria->compare('url',$this->url,true);
+		$criteria->compare('pageTitle',$this->title,true);
 		$criteria->compare('metaTitle',$this->metaTitle,true);
 		$criteria->compare('metaDescription',$this->metaDescription,true);
 		$criteria->compare('metaKeywords',$this->metaKeywords,true);

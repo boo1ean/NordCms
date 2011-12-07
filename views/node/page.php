@@ -1,7 +1,5 @@
 <div class="cms node-page">
 
-
-
 	<div class="node-content"><?php echo $content ?></div>
 
 	<?php if (Yii::app()->cms->checkAccess()): ?>

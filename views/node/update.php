@@ -1,5 +1,5 @@
 <?php $this->breadcrumbs=array(
-	$model->title=>$model->getUrl(),
+	$model->heading=>$model->getUrl(),
 	Yii::t('CmsModule.core','Update'),
 ) ?>
 

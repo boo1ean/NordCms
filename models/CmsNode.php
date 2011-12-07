@@ -4,7 +4,7 @@
  * @author Christoffer Niska <christoffer.niska@nordsoftware.com>
  * @copyright Copyright &copy; 2011, Nord Software Ltd
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @package cms.models
+ * @package cms
  */
 
 /**
@@ -106,10 +106,11 @@ class CmsNode extends CmsActiveRecord
 	 */
 	public function render()
 	{
-		$title = str_replace('{title}', $this->title, Yii::app()->cms->titleTemplate);
-		$content = str_replace('{title}', $title, $this->body);
-		$content = $this->renderNodes($content);
+		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->headingTemplate);
+		$content = str_replace('{heading}', $heading, $this->body);
+		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
+		$content = $this->renderNodes($content);
 
 		return $content;
 	}
@@ -120,10 +121,11 @@ class CmsNode extends CmsActiveRecord
 	 */
 	public function renderWidget()
 	{
-		$title = str_replace('{title}', $this->title, Yii::app()->cms->widgetTitleTemplate);
-		$content = str_replace('{title}', $title, $this->body);
-		$content = preg_replace('/{node:(\w+)}/i', '', $content); // widgets do not render inline nodes
+		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->widgetHeadingTemplate);
+		$content = str_replace('{heading}', $heading, $this->body);
+		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
+		$content = preg_replace('/{node:(\w+)}/i', '', $content); // widgets do not render inline nodes
 
 		return $content;
 	}
@@ -154,6 +156,36 @@ class CmsNode extends CmsActiveRecord
 	}
 
 	/**
+	 * Renders images within this node.
+	 * @param $content the content being rendered.
+	 * @return string the rendered content.
+	 */
+	protected function renderImages($content)
+	{
+		$matches = array();
+		preg_match_all('/{image:(\d+)}/i', $content, $matches);
+
+		$images = array();
+		foreach ($matches[1] as $id)
+		{
+			/** @var CmsAttachment $attachment */
+			$attachment = CmsAttachment::model()->findByPk($id);
+			if ($attachment instanceof CmsAttachment
+					&& strpos($attachment->mimeType, 'image') !== false)
+			{
+				$url = $attachment->createUrl();
+				$name = $attachment->resolveName();
+				$images[$id] = '<img src="'.$url.'" alt="'.$name.'" />';
+			}
+		}
+
+		foreach ($images as $id => $replace)
+			$content = preg_replace('/{image:'.$id.'}/i', $replace, $content);
+
+		return $content;
+	}
+
+	/**
 	 * Renders attachments within this node.
 	 * @param $content the content being rendered.
 	 * @return string the rendered content.
@@ -172,9 +204,11 @@ class CmsNode extends CmsActiveRecord
 			{
 				$url = $attachment->createUrl();
 				$name = $attachment->resolveName();
-				$attachments[$id] = strpos($attachment->mimeType, 'image') !== false
+				$attachments[$id] = '<a href="'.$url.'">'.$name.'</a>';
+
+				/*strpos($attachment->mimeType, 'image') !== false
 						? '<img src="'.$url.'" alt="'.$name.'" />'
-						: '<a href="'.$url.'">'.$name.'</a>';
+						: '<a href="'.$url.'">'.$name.'</a>';*/
 			}
 		}
 
@@ -229,12 +263,12 @@ class CmsNode extends CmsActiveRecord
 	}
 
     /**
-     * Returns the title for this node.
-     * @return string the title
+     * Returns the heading for this node.
+     * @return string the heading
      */
-    public function getTitle()
+    public function getHeading()
     {
-        return $this->content !== null && !empty($this->content->title) ? $this->content->title : $this->name;
+        return $this->content !== null && !empty($this->content->heading) ? $this->content->heading : $this->name;
     }
 
     /**
@@ -245,4 +279,13 @@ class CmsNode extends CmsActiveRecord
     {
         return $this->content !== null && !empty($this->content->body) ? $this->content->body : '';
     }
+
+	/**
+	 * Returns the page title for this node.
+	 * @return string the page title
+	 */
+	public function getPageTitle()
+	{
+		return $this->content !== null && !empty($this->content->pageTitle) ? $this->content->pageTitle : $this->name;
+	}
 }
