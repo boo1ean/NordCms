@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS `cms_attachment` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -15,10 +14,11 @@ CREATE TABLE IF NOT EXISTS `cms_content` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `nodeId` int(10) unsigned NOT NULL,
   `locale` varchar(50) NOT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  `title` varchar(255) DEFAULT NULL,
+  `heading` varchar(255) DEFAULT NULL,
   `body` longtext,
   `css` longtext,
+  `url` varchar(255) DEFAULT NULL,
+  `pageTitle` varchar(255) DEFAULT NULL,
   `metaTitle` varchar(255) DEFAULT NULL,
   `metaDescription` varchar(255) DEFAULT NULL,
   `metaKeywords` varchar(255) DEFAULT NULL,
