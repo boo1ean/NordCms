@@ -7,6 +7,8 @@
  * @package cms.models
  */
 
+Yii::import('cms.components.CmsActiveRecord');
+
 /**
  * This is the model class for table "cms_file".
  *
@@ -22,7 +24,6 @@
  * The following relations are available for this model:
  * @property CmsNode $owner
  */
-Yii::import('cms.components.CmsActiveRecord');
 class CmsAttachment extends CmsActiveRecord
 {
 	/**
@@ -106,7 +107,7 @@ class CmsAttachment extends CmsActiveRecord
 
 	/**
 	 * Saves a file for this attachment.
-	 * @param $file the uploaded path
+	 * @param CUploadedFile $file the uploaded path
 	 */
 	public function saveFile($file)
 	{
@@ -122,9 +123,18 @@ class CmsAttachment extends CmsActiveRecord
 	 * Returns the URL to this attachment.
 	 * @return string the URL
 	 */
-	public function createUrl()
+	public function getUrl()
 	{
 		return Yii::app()->request->baseUrl.Yii::app()->cms->attachmentPath.$this->resolveName();
+	}
+
+	/**
+	 * Returns the tag for this attachment.
+	 * @return string the tag
+	 */
+	public function renderTag()
+	{
+		return strpos($this->mimeType, 'image') !== false ? '{image:'.$this->id.'}' : '{attachment:'.$this->id.'}';
 	}
 
 	/**

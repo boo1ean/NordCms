@@ -7,6 +7,8 @@
  * @package cms.models
  */
 
+Yii::import('cms.components.CmsActiveRecord');
+
 /**
  * This is the model class for table "cms_content".
  *
@@ -23,7 +25,6 @@
  * @property string $metaDescription
  * @property string $metaKeywords
  */
-Yii::import('cms.components.CmsActiveRecord');
 class CmsContent extends CmsActiveRecord
 {
 	public $attachment;
@@ -115,9 +116,9 @@ class CmsContent extends CmsActiveRecord
 	public function getAttachments()
 	{
 		return new CActiveDataProvider('CmsAttachment', array(
-			'criteria'=>array(
-				'condition'=>'contentId=:contentId',
-				'params'=>array(':contentId'=>$this->id),
+			'criteria' => array(
+				'condition' => 'contentId=:contentId',
+				'params' => array(':contentId' => $this->id),
 			),
 		));
 	}

@@ -7,6 +7,8 @@
  * @package cms
  */
 
+Yii::import('cms.components.CmsActiveRecord');
+
 /**
  * This is the model class for table "cms_node".
  *
@@ -21,7 +23,6 @@
  * @property CmsContent $content
  * @property CmsContent[] $translations
  */
-Yii::import('cms.components.CmsActiveRecord');
 class CmsNode extends CmsActiveRecord
 {
 	/**
@@ -173,7 +174,7 @@ class CmsNode extends CmsActiveRecord
 			if ($attachment instanceof CmsAttachment
 					&& strpos($attachment->mimeType, 'image') !== false)
 			{
-				$url = $attachment->createUrl();
+				$url = $attachment->getUrl();
 				$name = $attachment->resolveName();
 				$images[$id] = '<img src="'.$url.'" alt="'.$name.'" />';
 			}
@@ -202,7 +203,7 @@ class CmsNode extends CmsActiveRecord
 			$attachment = CmsAttachment::model()->findByPk($id);
 			if ($attachment instanceof CmsAttachment)
 			{
-				$url = $attachment->createUrl();
+				$url = $attachment->getUrl();
 				$name = $attachment->resolveName();
 				$attachments[$id] = '<a href="'.$url.'">'.$name.'</a>';
 

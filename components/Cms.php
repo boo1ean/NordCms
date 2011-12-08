@@ -7,10 +7,11 @@
  * @package cms.components
  */
 
+Yii::import('cms.models.*');
+
 /**
  * Cms application component that allows for application-wide access to the cms.
  */
-Yii::import('cms.models.*');
 class Cms extends CApplicationComponent
 {
 	/**
@@ -50,11 +51,11 @@ class Cms extends CApplicationComponent
 	 */
 	public $attachmentPath = '/files/cms/attachments/';
 	/**
-	 * @property string the template to use for node titles.
+	 * @property string the template to use for node headings.
 	 */
 	public $headingTemplate = '<h1 class="heading">{heading}</h1>';
 	/**
-	 * @property string the template to use for widgets node titles.
+	 * @property string the template to use for widget headings.
 	 */
 	public $widgetHeadingTemplate = '<h3 class="heading">{heading}</h3>';
 	/**

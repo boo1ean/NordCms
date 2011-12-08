@@ -92,6 +92,7 @@
             'showTableOnEmpty'=>false,
             'columns'=>array(
 				array(
+					'name'=>'id',
 					'header'=>'#',
 					'value'=>'$data->id',
 				),
@@ -101,7 +102,7 @@
 				),
 				array(
 					'header'=>Yii::t('CmsModule.core', 'Tag'),
-					'value'=>'"{attachment:".$data->id."}"',
+					'value'=>'$data->renderTag()',
 				),
                 array(
                     'class'=>'CButtonColumn',
