@@ -15,6 +15,22 @@
 			'htmlOptions'=>array('enctype'=>'multipart/form-data')
 		)); ?>
 
+			<fieldset>
+
+				<div class="row">
+			        <?php echo $form->label($model,'name') ?>
+			        <span class="uneditable-input"><?php echo CHtml::encode($model->name) ?></span><br />
+					<span class="hint"><?php echo Yii::t('CmsModule.core','Node name cannot be changed.') ?></span>
+			    </div>
+
+				<div class="row">
+					<?php echo $form->label($model,'parentId') ?>
+					<?php echo $form->dropDownList($model,'parentId',$parents) ?>
+					<?php echo $form->error($model,'parentId') ?>
+				</div>
+
+			</fieldset>
+
 			<?php $tabs = array();
 			foreach ($translations as $locale=>$content) {
 				$language = Yii::app()->cms->languages[$locale];

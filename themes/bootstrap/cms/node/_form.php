@@ -1,7 +1,5 @@
 <fieldset>
 
-	<?php echo $form->uneditableRow($node,'name',array('hint'=>Yii::t('CmsModule.core','Node name cannot be changed.'))) ?>
-
     <?php echo $form->textFieldRow($model,'['.$model->locale.']heading',array('class'=>'span8')) ?>
 
     <div class="clearfix">
@@ -13,14 +11,7 @@
         )) ?>
         <?php echo $form->error($model,'['.$model->locale.']body') ?>
 		<div class="tags well">
-			<p><strong><?php echo Yii::t('CmsModule.core','Available tags'); ?></strong></p>
-			<ul>
-				<li><strong>{heading}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','the page heading'); ?></em></li>
-				<li><strong>{image:id}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','displays an attached image'); ?></em></li>
-				<li><strong>{attachment:id}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','a link to an attached file'); ?></em></li>
-				<li><strong>{link:name}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','a link to another node'); ?></em></li>
-				<li><strong>{node:name}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','displays an inline node'); ?></em></li>
-			</ul>
+			<?php $this->renderPartial('cms.views.node._tags'); ?>
 		</div>
     </div>
 
@@ -37,6 +28,8 @@
 	<?php echo $form->textFieldRow($model,'['.$model->locale.']url',array('class'=>'span8')) ?>
 
 	<?php echo $form->textFieldRow($model,'['.$model->locale.']pageTitle',array('class'=>'span8')) ?>
+
+	<?php echo $form->textFieldRow($model,'['.$model->locale.']breadcrumb',array('class'=>'span8')) ?>
 
     <?php echo $form->textFieldRow($model,'['.$model->locale.']metaTitle',array('class'=>'span8')) ?>
 

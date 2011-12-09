@@ -26,6 +26,13 @@ Yii::import('cms.components.CmsActiveRecord');
  */
 class CmsNode extends CmsActiveRecord
 {
+	protected $_patterns = array(
+		'node'=>'/{{node:([\w\d]+)}}/i',
+		'link'=>'/{{([\w\d]+)\|([\w\d\s]+)}}/i',
+		'image'=>'/{{image:([\d]+)}}/i',
+		'file'=>'/{{file:([\d]+)}}/i',
+	);
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className the class name
@@ -111,7 +118,7 @@ class CmsNode extends CmsActiveRecord
 	public function render()
 	{
 		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->headingTemplate);
-		$content = str_replace('{heading}', $heading, $this->body);
+		$content = str_replace('{{heading}}', $heading, $this->body);
 		$content = $this->renderLinks($content);
 		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
@@ -127,11 +134,11 @@ class CmsNode extends CmsActiveRecord
 	public function renderWidget()
 	{
 		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->widgetHeadingTemplate);
-		$content = str_replace('{heading}', $heading, $this->body);
+		$content = str_replace('{{heading}}', $heading, $this->body);
 		$content = $this->renderLinks($content);
 		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
-		$content = preg_replace('/{node:(\w+)}/i', '', $content); // widgets do not render inline nodes
+		$content = preg_replace($this->_patterns['node'], '', $content); // widgets do not render inline nodes
 
 		return $content;
 	}
@@ -144,19 +151,19 @@ class CmsNode extends CmsActiveRecord
 	protected function renderNodes($content)
 	{
 		$matches = array();
-		preg_match_all('/{node:(\w+)}/i', $content, $matches);
+		preg_match_all($this->_patterns['node'], $content, $matches);
 
 		$nodes = array();
-		foreach ($matches[1] as $name)
+		foreach ($matches[1] as $index => $name)
 		{
 			/** @var CmsNode $node */
 			$node = Yii::app()->cms->loadNode($name);
 			if ($node instanceof CmsNode)
-				$nodes[$name] = $node->renderWidget();
+				$nodes[$index] = $node->renderWidget();
 		}
 
-		foreach ($nodes as $name => $replace)
-			$content = preg_replace('/{node:'.$name.'}/i', $replace, $content);
+		if (!empty($nodes))
+			$content = strtr($content, array_combine($matches[0], $nodes));
 
 		return $content;
 	}
@@ -169,19 +176,22 @@ class CmsNode extends CmsActiveRecord
 	protected function renderLinks($content)
 	{
 		$matches = array();
-		preg_match_all('/{link:(\w+)}/i', $content, $matches);
+		preg_match_all($this->_patterns['link'], $content, $matches);
 
 		$links = array();
-		foreach ($matches[1] as $name)
+		foreach ($matches[1] as $index => $name)
 		{
 			/** @var CmsNode $node */
 			$node = Yii::app()->cms->loadNode($name);
 			if ($node instanceof CmsNode)
-				$links[$name] = CHtml::link($node->heading, $node->getUrl());
+			{
+				$text = $matches[2][$index];
+				$links[$index] = CHtml::link($text, $node->getUrl());
+			}
 		}
 
-		foreach ($links as $name => $replace)
-			$content = preg_replace('/{link:'.$name.'}/i', $replace, $content);
+		if (!empty($links))
+			$content = strtr($content, array_combine($matches[0], $links));
 
 		return $content;
 	}
@@ -194,24 +204,23 @@ class CmsNode extends CmsActiveRecord
 	protected function renderImages($content)
 	{
 		$matches = array();
-		preg_match_all('/{image:(\d+)}/i', $content, $matches);
+		preg_match_all($this->_patterns['image'], $content, $matches);
 
 		$images = array();
-		foreach ($matches[1] as $id)
+		foreach ($matches[1] as $index => $id)
 		{
 			/** @var CmsAttachment $attachment */
 			$attachment = CmsAttachment::model()->findByPk($id);
-			if ($attachment instanceof CmsAttachment
-					&& strpos($attachment->mimeType, 'image') !== false)
+			if ($attachment instanceof CmsAttachment && strpos($attachment->mimeType, 'image') !== false)
 			{
 				$url = $attachment->getUrl();
 				$name = $attachment->resolveName();
-				$images[$id] = '<img src="'.$url.'" alt="'.$name.'" />';
+				$images[$index] = CHtml::image($url, $name);
 			}
 		}
 
-		foreach ($images as $id => $replace)
-			$content = preg_replace('/{image:'.$id.'}/i', $replace, $content);
+		if (!empty($images))
+			$content = strtr($content, array_combine($matches[0], $images));
 
 		return $content;
 	}
@@ -224,10 +233,10 @@ class CmsNode extends CmsActiveRecord
 	protected function renderAttachments($content)
 	{
 		$matches = array();
-		preg_match_all('/{attachment:(\d+)}/i', $content, $matches);
+		preg_match_all($this->_patterns['file'], $content, $matches);
 
 		$attachments = array();
-		foreach ($matches[1] as $id)
+		foreach ($matches[1] as $index => $id)
 		{
 			/** @var CmsAttachment $attachment */
 			$attachment = CmsAttachment::model()->findByPk($id);
@@ -235,16 +244,12 @@ class CmsNode extends CmsActiveRecord
 			{
 				$url = $attachment->getUrl();
 				$name = $attachment->resolveName();
-				$attachments[$id] = '<a href="'.$url.'">'.$name.'</a>';
-
-				/*strpos($attachment->mimeType, 'image') !== false
-						? '<img src="'.$url.'" alt="'.$name.'" />'
-						: '<a href="'.$url.'">'.$name.'</a>';*/
+				$attachments[$index] = CHtml::link($name, $url);
 			}
 		}
 
-		foreach ($attachments as $id => $replace)
-			$content = preg_replace('/{attachment:'.$id.'}/i', $replace, $content);
+		if (!empty($attachments))
+			$content = strtr($content, array_combine($matches[0], $attachments));
 
 		return $content;
 	}
