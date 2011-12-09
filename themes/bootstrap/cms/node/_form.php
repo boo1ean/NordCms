@@ -18,7 +18,8 @@
 				<li><strong>{heading}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','the page heading'); ?></em></li>
 				<li><strong>{image:id}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','displays an attached image'); ?></em></li>
 				<li><strong>{attachment:id}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','a link to an attached file'); ?></em></li>
-				<li><strong>{node:name}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','displays an inline-node'); ?></em></li>
+				<li><strong>{link:name}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','a link to another node'); ?></em></li>
+				<li><strong>{node:name}</strong> &ndash; <em><?php echo Yii::t('CmsModule.core','displays an inline node'); ?></em></li>
 			</ul>
 		</div>
     </div>

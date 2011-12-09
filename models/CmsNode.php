@@ -109,6 +109,7 @@ class CmsNode extends CmsActiveRecord
 	{
 		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->headingTemplate);
 		$content = str_replace('{heading}', $heading, $this->body);
+		$content = $this->renderLinks($content);
 		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
 		$content = $this->renderNodes($content);
@@ -124,6 +125,7 @@ class CmsNode extends CmsActiveRecord
 	{
 		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->widgetHeadingTemplate);
 		$content = str_replace('{heading}', $heading, $this->body);
+		$content = $this->renderLinks($content);
 		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
 		$content = preg_replace('/{node:(\w+)}/i', '', $content); // widgets do not render inline nodes
@@ -152,6 +154,31 @@ class CmsNode extends CmsActiveRecord
 
 		foreach ($nodes as $name => $replace)
 			$content = preg_replace('/{node:'.$name.'}/i', $replace, $content);
+
+		return $content;
+	}
+
+	/**
+	 * Renders links within this node.
+	 * @param $content the content being rendered.
+	 * @return string the rendered content.
+	 */
+	protected function renderLinks($content)
+	{
+		$matches = array();
+		preg_match_all('/{link:(\w+)}/i', $content, $matches);
+
+		$links = array();
+		foreach ($matches[1] as $name)
+		{
+			/** @var CmsNode $node */
+			$node = Yii::app()->cms->loadNode($name);
+			if ($node instanceof CmsNode)
+				$links[$name] = CHtml::link($node->heading, $node->getUrl());
+		}
+
+		foreach ($links as $name => $replace)
+			$content = preg_replace('/{link:'.$name.'}/i', $replace, $content);
 
 		return $content;
 	}
@@ -240,7 +267,7 @@ class CmsNode extends CmsActiveRecord
 	public function getUrl($params = array())
 	{
 		return Yii::app()->createUrl('cms/node/page',
-				CMap::mergeArray($params, array('id'=>$this->id, 'name'=>$this->seoName)));
+				CMap::mergeArray($params, array('id'=>$this->id, 'name'=>$this->getContentUrl())));
 	}
 
 	/**
@@ -251,14 +278,14 @@ class CmsNode extends CmsActiveRecord
 	public function getAbsoluteUrl($params = array())
 	{
 		return Yii::app()->createAbsoluteUrl('cms/node/page',
-				CMap::mergeArray($params, array('id'=>$this->id, 'name'=>$this->seoName)));
+				CMap::mergeArray($params, array('id'=>$this->id, 'name'=>$this->getContentUrl())));
 	}
 
 	/**
 	 * Returns the SEO optimized name of this node.
 	 * @return string the name
 	 */
-	public function getSeoName()
+	public function getContentUrl()
 	{
 		return $this->content !== null && !empty($this->content->url) ? urldecode($this->content->url) : $this->name;
 	}
