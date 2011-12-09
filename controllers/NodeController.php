@@ -49,7 +49,7 @@ class NodeController extends CmsController
 			$translations[$language] = $content;
 		}
 
-		if (isset($_POST['CmsContent']))
+		if (isset($_POST['CmsNode']) && isset($_POST['CmsContent']))
 		{
 			$valid = true;
 			foreach ($translations as $language => $content)
@@ -67,7 +67,6 @@ class NodeController extends CmsController
 					$attachment->mimeType = $upload->getType();
 					$attachment->byteSize = $upload->getSize();
 					$attachment->save(false);
-
 					$attachment->saveFile($upload);
 				}
 
@@ -76,6 +75,7 @@ class NodeController extends CmsController
 
 			if ($valid)
 			{
+				$model->attributes = $_POST['CmsNode'];
 				$model->save(); // we need to save the node so that the updated column is updated
 
 				foreach ($translations as $content)
@@ -86,8 +86,12 @@ class NodeController extends CmsController
 			}
 		}
 
+		$parents = CMap::mergeArray(array(''=>Yii::t('CmsModule.core','Select parent').' ...'),
+				CHtml::listData(CmsNode::model()->findAll('id!=:id',array(':id'=>$model->id)),'id','name'));
+
 		$this->render('update', array(
 			'model'=>$model,
+			'parents'=>$parents,
 			'translations'=>$translations,
 		));
 	}
@@ -129,7 +133,7 @@ class NodeController extends CmsController
 				'{appName}'=>Yii::app()->name,
 			));
 
-            $this->breadcrumbs = array($model->heading);
+            $this->breadcrumbs = array($model->breadcrumb);
 		}
 
 		$this->render('page', array(

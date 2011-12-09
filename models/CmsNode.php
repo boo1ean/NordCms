@@ -16,6 +16,7 @@ Yii::import('cms.components.CmsActiveRecord');
  * @property integer $id
  * @property string $created
  * @property string $updated
+ * @property integer $parentId
  * @property string $name
  * @property integer $deleted
  *
@@ -49,10 +50,10 @@ class CmsNode extends CmsActiveRecord
 	public function rules()
 	{
 		return array(
-			array('deleted', 'numerical', 'integerOnly'=>true),
+			array('id, parentId, deleted', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>255),
 			array('updated', 'safe'),
-			array('id, created, updated, name, deleted', 'safe', 'on'=>'search'),
+			array('id, created, updated, parentId, name, deleted', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -77,6 +78,7 @@ class CmsNode extends CmsActiveRecord
 			'id' => Yii::t('CmsModule.core', 'Id'),
 			'created' => Yii::t('CmsModule.core', 'Created'),
 			'updated' => Yii::t('CmsModule.core', 'Updated'),
+			'parentId' => Yii::t('CmsModule.core', 'Parent'),
 			'name' => Yii::t('CmsModule.core', 'Name'),
 			'deleted' => Yii::t('CmsModule.core', 'Deleted'),
 		);
@@ -93,6 +95,7 @@ class CmsNode extends CmsActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('created',$this->created,true);
 		$criteria->compare('updated',$this->updated,true);
+		$criteria->compare('parentId',$this->parentId);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('deleted',$this->deleted);
 
@@ -248,7 +251,7 @@ class CmsNode extends CmsActiveRecord
 
 	/**
 	 * Returns the associated content in a specific language.
-	 * @param $locale the locale id, e.g. 'en_us'
+	 * @param string $locale the locale id, e.g. 'en_us'
 	 * @return CmsContent the content model
 	 */
 	public function getContent($locale)
@@ -315,5 +318,14 @@ class CmsNode extends CmsActiveRecord
 	public function getPageTitle()
 	{
 		return $this->content !== null && !empty($this->content->pageTitle) ? $this->content->pageTitle : $this->name;
+	}
+
+	/**
+	 * Returns the breadcrumb text for this node.
+	 * @return string the breadcrumb text
+	 */
+	public function getBreadcrumb()
+	{
+		return $this->content !== null && !empty($this->content->breadcrumb) ? $this->content->breadcrumb : $this->name;
 	}
 }

@@ -21,6 +21,7 @@ Yii::import('cms.components.CmsActiveRecord');
  * @property string $css
  * @property string $url
  * @property string $pageTitle
+ * @property string $breadcrumb
  * @property string $metaTitle
  * @property string $metaDescription
  * @property string $metaKeywords
@@ -56,10 +57,10 @@ class CmsContent extends CmsActiveRecord
 			array('nodeId, locale', 'required'),
 			array('nodeId', 'length', 'max'=>10),
 			array('locale', 'length', 'max'=>50),
-			array('heading, url, pageTitle, metaTitle, metaDescription, metaKeywords', 'length', 'max'=>255),
+			array('heading, url, pageTitle, breadcrumb, metaTitle, metaDescription, metaKeywords', 'length', 'max'=>255),
 			array('attachment', 'file', 'types'=>Yii::app()->cms->allowedFileTypes, 'allowEmpty'=>true),
 			array('body, css', 'safe'),
-			array('id, nodeId, locale, heading, url, pageTitle, metaTitle, metaDescription, metaKeywords', 'safe', 'on'=>'search'),
+			array('id, nodeId, locale, heading, url, pageTitle, breadcrumb, metaTitle, metaDescription, metaKeywords', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -77,6 +78,7 @@ class CmsContent extends CmsActiveRecord
 			'css' => Yii::t('CmsModule.core', 'Stylesheet'),
 			'url' => Yii::t('CmsModule.core', 'URL'),
 			'pageTitle' => Yii::t('CmsModule.core', 'Page Title'),
+			'breadcrumb' => Yii::t('CmsModule.core', 'Breadcrumb'),
 			'metaTitle' => Yii::t('CmsModule.core', 'Meta Title'),
 			'metaDescription' => Yii::t('CmsModule.core', 'Meta Description'),
 			'metaKeywords' => Yii::t('CmsModule.core', 'Meta Keywords'),
@@ -99,7 +101,8 @@ class CmsContent extends CmsActiveRecord
 		$criteria->compare('body',$this->body,true);
 		$criteria->compare('css',$this->css,true);
 		$criteria->compare('url',$this->url,true);
-		$criteria->compare('pageTitle',$this->title,true);
+		$criteria->compare('pageTitle',$this->pageTitle,true);
+		$criteria->compare('breadcrumb',$this->breadcrumb,true);
 		$criteria->compare('metaTitle',$this->metaTitle,true);
 		$criteria->compare('metaDescription',$this->metaDescription,true);
 		$criteria->compare('metaKeywords',$this->metaKeywords,true);

@@ -59,6 +59,11 @@
 		<?php echo $form->error($model,'['.$model->locale.']pageTitle') ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->labelEx($model,'['.$model->locale.']breadcrumb') ?>
+		<?php echo $form->textField($model,'['.$model->locale.']breadcrumb') ?>
+		<?php echo $form->error($model,'['.$model->locale.']breadcrumb') ?>
+	</div>
 
     <div class="row">
         <?php echo $form->labelEx($model,'['.$model->locale.']metaTitle') ?>
