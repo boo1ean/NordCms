@@ -16,7 +16,6 @@ Yii::import('cms.components.CmsActiveRecord');
  * @property integer $id
  * @property string $created
  * @property string $updated
- * @property integer $parentId
  * @property string $name
  * @property integer $deleted
  *
@@ -26,6 +25,13 @@ Yii::import('cms.components.CmsActiveRecord');
  */
 class CmsNode extends CmsActiveRecord
 {
+	protected $_patterns = array(
+		'file'=>'/{{file:([\d]+)}}/i',
+		'image'=>'/{{image:([\d]+)}}/i',
+		'link'=>'/{{([\w\d]+)\|([\w\d\s-]+)}}/i',
+		'node'=>'/{{node:([\w\d]+)}}/i',
+	);
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className the class name
@@ -50,10 +56,10 @@ class CmsNode extends CmsActiveRecord
 	public function rules()
 	{
 		return array(
-			array('id, parentId, deleted', 'numerical', 'integerOnly'=>true),
+			array('id, deleted', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>255),
 			array('updated', 'safe'),
-			array('id, created, updated, parentId, name, deleted', 'safe', 'on'=>'search'),
+			array('id, created, updated, name, deleted', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,7 +84,6 @@ class CmsNode extends CmsActiveRecord
 			'id' => Yii::t('CmsModule.core', 'Id'),
 			'created' => Yii::t('CmsModule.core', 'Created'),
 			'updated' => Yii::t('CmsModule.core', 'Updated'),
-			'parentId' => Yii::t('CmsModule.core', 'Parent'),
 			'name' => Yii::t('CmsModule.core', 'Name'),
 			'deleted' => Yii::t('CmsModule.core', 'Deleted'),
 		);
@@ -95,7 +100,6 @@ class CmsNode extends CmsActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('created',$this->created,true);
 		$criteria->compare('updated',$this->updated,true);
-		$criteria->compare('parentId',$this->parentId);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('deleted',$this->deleted);
 
@@ -111,7 +115,7 @@ class CmsNode extends CmsActiveRecord
 	public function render()
 	{
 		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->headingTemplate);
-		$content = str_replace('{heading}', $heading, $this->body);
+		$content = $this->renderHeading($heading, $this->body);
 		$content = $this->renderLinks($content);
 		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
@@ -127,107 +131,126 @@ class CmsNode extends CmsActiveRecord
 	public function renderWidget()
 	{
 		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->widgetHeadingTemplate);
-		$content = str_replace('{heading}', $heading, $this->body);
+		$content = $this->renderHeading($heading, $this->body);
 		$content = $this->renderLinks($content);
 		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
-		$content = preg_replace('/{node:(\w+)}/i', '', $content); // widgets do not render inline nodes
+		$content = preg_replace($this->_patterns['node'], '', $content); // widgets do not render inline nodes
 
 		return $content;
 	}
 
 	/**
+	 * Renders the heading for this node.
+	 * @param string $heading the heading to render
+	 * @param string $content the content being rendered
+	 * @return string the content
+	 */
+	protected function renderHeading($heading, $content)
+	{
+		return str_replace('{{heading}}', $heading, $content);
+	}
+
+	/**
 	 * Renders nodes within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderNodes($content)
 	{
 		$matches = array();
-		preg_match_all('/{node:(\w+)}/i', $content, $matches);
+		preg_match_all($this->_patterns['node'], $content, $matches);
 
 		$nodes = array();
-		foreach ($matches[1] as $name)
+		foreach ($matches[1] as $index => $name)
 		{
 			/** @var CmsNode $node */
 			$node = Yii::app()->cms->loadNode($name);
 			if ($node instanceof CmsNode)
-				$nodes[$name] = $node->renderWidget();
+				$nodes[$index] = $node->renderWidget();
 		}
 
-		foreach ($nodes as $name => $replace)
-			$content = preg_replace('/{node:'.$name.'}/i', $replace, $content);
+		if (!empty($nodes))
+			$content = strtr($content, array_combine($matches[0], $nodes));
 
 		return $content;
 	}
 
 	/**
 	 * Renders links within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderLinks($content)
 	{
 		$matches = array();
-		preg_match_all('/{link:(\w+)}/i', $content, $matches);
+		preg_match_all($this->_patterns['link'], $content, $matches);
 
 		$links = array();
-		foreach ($matches[1] as $name)
+		foreach ($matches[1] as $index => $name)
 		{
+			/** @var Cms $cms */
+			$cms = Yii::app()->cms;
+
 			/** @var CmsNode $node */
-			$node = Yii::app()->cms->loadNode($name);
-			if ($node instanceof CmsNode)
-				$links[$name] = CHtml::link($node->heading, $node->getUrl());
+			$node = $cms->loadNode($name);
+			if (!$node instanceof CmsNode)
+			{
+				Yii::app()->cms->createNode($name);
+				$node = Yii::app()->cms->loadNode($name);
+			}
+
+			$text = $matches[2][$index];
+			$links[$index] = CHtml::link($text, $node->getUrl());
 		}
 
-		foreach ($links as $name => $replace)
-			$content = preg_replace('/{link:'.$name.'}/i', $replace, $content);
+		if (!empty($links))
+			$content = strtr($content, array_combine($matches[0], $links));
 
 		return $content;
 	}
 
 	/**
 	 * Renders images within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderImages($content)
 	{
 		$matches = array();
-		preg_match_all('/{image:(\d+)}/i', $content, $matches);
+		preg_match_all($this->_patterns['image'], $content, $matches);
 
 		$images = array();
-		foreach ($matches[1] as $id)
+		foreach ($matches[1] as $index => $id)
 		{
 			/** @var CmsAttachment $attachment */
 			$attachment = CmsAttachment::model()->findByPk($id);
-			if ($attachment instanceof CmsAttachment
-					&& strpos($attachment->mimeType, 'image') !== false)
+			if ($attachment instanceof CmsAttachment && strpos($attachment->mimeType, 'image') !== false)
 			{
 				$url = $attachment->getUrl();
 				$name = $attachment->resolveName();
-				$images[$id] = '<img src="'.$url.'" alt="'.$name.'" />';
+				$images[$index] = CHtml::image($url, $name);
 			}
 		}
 
-		foreach ($images as $id => $replace)
-			$content = preg_replace('/{image:'.$id.'}/i', $replace, $content);
+		if (!empty($images))
+			$content = strtr($content, array_combine($matches[0], $images));
 
 		return $content;
 	}
 
 	/**
 	 * Renders attachments within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderAttachments($content)
 	{
 		$matches = array();
-		preg_match_all('/{attachment:(\d+)}/i', $content, $matches);
+		preg_match_all($this->_patterns['file'], $content, $matches);
 
 		$attachments = array();
-		foreach ($matches[1] as $id)
+		foreach ($matches[1] as $index => $id)
 		{
 			/** @var CmsAttachment $attachment */
 			$attachment = CmsAttachment::model()->findByPk($id);
@@ -235,17 +258,27 @@ class CmsNode extends CmsActiveRecord
 			{
 				$url = $attachment->getUrl();
 				$name = $attachment->resolveName();
-				$attachments[$id] = '<a href="'.$url.'">'.$name.'</a>';
-
-				/*strpos($attachment->mimeType, 'image') !== false
-						? '<img src="'.$url.'" alt="'.$name.'" />'
-						: '<a href="'.$url.'">'.$name.'</a>';*/
+				$attachments[$index] = CHtml::link($name, $url);
 			}
 		}
 
-		foreach ($attachments as $id => $replace)
-			$content = preg_replace('/{attachment:'.$id.'}/i', $replace, $content);
+		if (!empty($attachments))
+			$content = strtr($content, array_combine($matches[0], $attachments));
 
+		return $content;
+	}
+
+	/**
+	 * Creates content for this node.
+	 * @param string $locale the locale id, e.g. 'en_us'
+	 * @return CmsContent the content model
+	 */
+	public function createContent($locale)
+	{
+		$content = new CmsContent();
+		$content->nodeId = $this->id;
+		$content->locale = $locale;
+		$content->save();
 		return $content;
 	}
 

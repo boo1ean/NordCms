@@ -7,6 +7,20 @@
  * @cssdoc version 1.0-pre
  */
 
+.cms .node-page {
+	padding: 20px;
+}
+
+.cms .node-nav {
+	list-style-type: none;
+	margin-left: 0;
+}
+
+.cms .node-nav li {
+	display: inline;
+	margin-right: 10px;
+}
+
 .cms .update-link {
 	margin-top: 10px;
 }
@@ -27,10 +41,6 @@
 	float: right;
 }
 
-.cms .form {
-	border-right: 1px solid #ccc;
-}
-
 .cms .tags {
 	background-color: #eee;
 	margin-top: 10px;
@@ -39,5 +49,70 @@
 }
 
 .cms .tags ul {
-	margin-bottom: 0;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.cms.boot .grid-view {
+	margin-bottom: 20px;
+}
+
+/*
+	Blueprint style
+*/
+
+.cms.bp input[type="text"] {
+	width: 300px;
+}
+
+.cms.bp textarea {
+	width: 620px;
+}
+
+.cms.bp .ui-widget {
+	font-size: inherit;
+}
+
+.cms.bp .cms-content {
+	padding: 20px 0 20px 20px;
+}
+
+.cms.bp .cms-sidebar {
+	padding: 20px;
+}
+
+.cms.bp .markItUp {
+	width: 615px !important;
+}
+
+.cms.bp .markItUpEditor {
+	width: 613px !important;
+}
+
+.cms.bp .tags {
+	width: 585px;
+}
+
+/*
+	Bootstrap theme style
+*/
+
+.cms.boot .cms-content {
+	border-right: 1px solid #ccc;
+	padding: 20px 0 0 20px;
+}
+
+.cms.boot form {
+	margin-left: -20px;
+}
+
+.cms.boot .actions {
+	border-radius: 0 0 0 6px;
+	-moz-border-radius: 0 0 0 6px;
+	-webkit-border-radius: 0 0 0 6px;
+}
+
+.cms.boot .cms-sidebar {
+	padding: 20px 20px 0 0;
 }

@@ -134,7 +134,7 @@ class CmsAttachment extends CmsActiveRecord
 	 */
 	public function renderTag()
 	{
-		return strpos($this->mimeType, 'image') !== false ? '{image:'.$this->id.'}' : '{attachment:'.$this->id.'}';
+		return strpos($this->mimeType, 'image') !== false ? '{{image:'.$this->id.'}}' : '{{file:'.$this->id.'}}';
 	}
 
 	/**
