@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset class="form-content">
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'['.$model->locale.']heading') ?>
@@ -28,7 +28,7 @@
 
 </fieldset>
 
-<fieldset>
+<fieldset class="form-page-settings">
 
     <legend><?php echo Yii::t('CmsModule.core', 'Page settings') ?></legend>
 
@@ -72,7 +72,7 @@
 
 </fieldset>
 
-<fieldset>
+<fieldset class="form-attachments">
 
     <legend><?php echo Yii::t('CmsModule.core', 'Attachments') ?></legend>
 

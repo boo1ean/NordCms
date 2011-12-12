@@ -7,6 +7,12 @@
  * @cssdoc version 1.0-pre
  */
 
+.cms .form-node,
+.cms .form-content,
+.cms .form-page-settings {
+	margin-bottom: 20px;
+}
+
 .cms .update-link {
 	margin-top: 10px;
 }
@@ -38,10 +44,6 @@
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-}
-
-.cms.boot .grid-view {
-	margin-bottom: 20px;
 }
 
 /*
@@ -84,21 +86,29 @@
 	Bootstrap theme style
 */
 
+.cms.boot form {
+	margin-left: -20px;
+}
+
 .cms.boot .cms-content {
 	border-right: 1px solid #ccc;
 	padding: 20px 0 0 20px;
 }
 
-.cms.boot form {
-	margin-left: -20px;
+.cms.boot .cms-sidebar {
+	padding: 20px 20px 0 0;
+}
+
+.cms.boot .tags {
+	margin-bottom: 0;
+}
+
+.cms.boot .grid-view {
+	margin-bottom: 20px;
 }
 
 .cms.boot .actions {
 	border-radius: 0 0 0 6px;
 	-moz-border-radius: 0 0 0 6px;
 	-webkit-border-radius: 0 0 0 6px;
-}
-
-.cms.boot .cms-sidebar {
-	padding: 20px 20px 0 0;
 }

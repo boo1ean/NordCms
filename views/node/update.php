@@ -13,7 +13,7 @@
 		'htmlOptions'=>array('enctype'=>'multipart/form-data')
 	)); ?>
 
-		<fieldset>
+		<fieldset class="form-node">
 
 			<div class="row">
 		        <?php echo $form->label($model,'name') ?>

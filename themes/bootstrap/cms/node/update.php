@@ -14,7 +14,7 @@
 		'htmlOptions'=>array('enctype'=>'multipart/form-data'),
 	)) ?>
 
-		<fieldset>
+		<fieldset class="form-node">
 
 			<?php echo $form->uneditableRow($model,'name',array('hint'=>Yii::t('CmsModule.core','Node name cannot be changed.'))) ?>
 
