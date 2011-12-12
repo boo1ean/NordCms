@@ -198,6 +198,7 @@ class CmsNode extends CmsActiveRecord
 			{
 				Yii::app()->cms->createNode($name);
 				$node = Yii::app()->cms->loadNode($name);
+
 			}
 
 			$text = $matches[2][$index];

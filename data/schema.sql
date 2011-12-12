@@ -1,3 +1,9 @@
+/*
+	Cms database schematic.
+	Author Christoffer Niska <christoffer.niska@nordsoftware.com>
+	Copyright (c) 2011, Nord Software Ltd
+ */
+
 CREATE TABLE IF NOT EXISTS `cms_attachment` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -19,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `cms_content` (
   `css` longtext,
   `url` varchar(255) DEFAULT NULL,
   `pageTitle` varchar(255) DEFAULT NULL,
+  `breadcrumb` varchar(255) DEFAULT NULL,
   `metaTitle` varchar(255) DEFAULT NULL,
   `metaDescription` varchar(255) DEFAULT NULL,
   `metaKeywords` varchar(255) DEFAULT NULL,
@@ -30,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `cms_node` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated` timestamp NULL DEFAULT NULL,
+  `parentId` int(10) NOT NULL DEFAULT '0',
   `name` varchar(255) NOT NULL,
   `deleted` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
