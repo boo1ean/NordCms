@@ -7,20 +7,6 @@
  * @cssdoc version 1.0-pre
  */
 
-.cms .node-page {
-	padding: 20px;
-}
-
-.cms .node-nav {
-	list-style-type: none;
-	margin-left: 0;
-}
-
-.cms .node-nav li {
-	display: inline;
-	margin-right: 10px;
-}
-
 .cms .update-link {
 	margin-top: 10px;
 }
