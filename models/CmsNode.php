@@ -16,7 +16,6 @@ Yii::import('cms.components.CmsActiveRecord');
  * @property integer $id
  * @property string $created
  * @property string $updated
- * @property integer $parentId
  * @property string $name
  * @property integer $deleted
  *
@@ -27,10 +26,10 @@ Yii::import('cms.components.CmsActiveRecord');
 class CmsNode extends CmsActiveRecord
 {
 	protected $_patterns = array(
-		'node'=>'/{{node:([\w\d]+)}}/i',
-		'link'=>'/{{([\w\d]+)\|([\w\d\s]+)}}/i',
-		'image'=>'/{{image:([\d]+)}}/i',
 		'file'=>'/{{file:([\d]+)}}/i',
+		'image'=>'/{{image:([\d]+)}}/i',
+		'link'=>'/{{([\w\d]+)\|([\w\d\s-]+)}}/i',
+		'node'=>'/{{node:([\w\d]+)}}/i',
 	);
 
 	/**
@@ -57,10 +56,10 @@ class CmsNode extends CmsActiveRecord
 	public function rules()
 	{
 		return array(
-			array('id, parentId, deleted', 'numerical', 'integerOnly'=>true),
+			array('id, deleted', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>255),
 			array('updated', 'safe'),
-			array('id, created, updated, parentId, name, deleted', 'safe', 'on'=>'search'),
+			array('id, created, updated, name, deleted', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,7 +84,6 @@ class CmsNode extends CmsActiveRecord
 			'id' => Yii::t('CmsModule.core', 'Id'),
 			'created' => Yii::t('CmsModule.core', 'Created'),
 			'updated' => Yii::t('CmsModule.core', 'Updated'),
-			'parentId' => Yii::t('CmsModule.core', 'Parent'),
 			'name' => Yii::t('CmsModule.core', 'Name'),
 			'deleted' => Yii::t('CmsModule.core', 'Deleted'),
 		);
@@ -102,7 +100,6 @@ class CmsNode extends CmsActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('created',$this->created,true);
 		$criteria->compare('updated',$this->updated,true);
-		$criteria->compare('parentId',$this->parentId);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('deleted',$this->deleted);
 
@@ -118,7 +115,7 @@ class CmsNode extends CmsActiveRecord
 	public function render()
 	{
 		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->headingTemplate);
-		$content = str_replace('{{heading}}', $heading, $this->body);
+		$content = $this->renderHeading($heading, $this->body);
 		$content = $this->renderLinks($content);
 		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
@@ -134,7 +131,7 @@ class CmsNode extends CmsActiveRecord
 	public function renderWidget()
 	{
 		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->widgetHeadingTemplate);
-		$content = str_replace('{{heading}}', $heading, $this->body);
+		$content = $this->renderHeading($heading, $this->body);
 		$content = $this->renderLinks($content);
 		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
@@ -144,9 +141,20 @@ class CmsNode extends CmsActiveRecord
 	}
 
 	/**
+	 * Renders the heading for this node.
+	 * @param string $heading the heading to render
+	 * @param string $content the content being rendered
+	 * @return string the content
+	 */
+	protected function renderHeading($heading, $content)
+	{
+		return str_replace('{{heading}}', $heading, $content);
+	}
+
+	/**
 	 * Renders nodes within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderNodes($content)
 	{
@@ -170,8 +178,8 @@ class CmsNode extends CmsActiveRecord
 
 	/**
 	 * Renders links within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderLinks($content)
 	{
@@ -181,13 +189,20 @@ class CmsNode extends CmsActiveRecord
 		$links = array();
 		foreach ($matches[1] as $index => $name)
 		{
+			/** @var Cms $cms */
+			$cms = Yii::app()->cms;
+
 			/** @var CmsNode $node */
-			$node = Yii::app()->cms->loadNode($name);
-			if ($node instanceof CmsNode)
+			$node = $cms->loadNode($name);
+			if (!$node instanceof CmsNode)
 			{
-				$text = $matches[2][$index];
-				$links[$index] = CHtml::link($text, $node->getUrl());
+				Yii::app()->cms->createNode($name);
+				$node = Yii::app()->cms->loadNode($name);
+
 			}
+
+			$text = $matches[2][$index];
+			$links[$index] = CHtml::link($text, $node->getUrl());
 		}
 
 		if (!empty($links))
@@ -198,8 +213,8 @@ class CmsNode extends CmsActiveRecord
 
 	/**
 	 * Renders images within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderImages($content)
 	{
@@ -227,8 +242,8 @@ class CmsNode extends CmsActiveRecord
 
 	/**
 	 * Renders attachments within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderAttachments($content)
 	{
@@ -251,6 +266,20 @@ class CmsNode extends CmsActiveRecord
 		if (!empty($attachments))
 			$content = strtr($content, array_combine($matches[0], $attachments));
 
+		return $content;
+	}
+
+	/**
+	 * Creates content for this node.
+	 * @param string $locale the locale id, e.g. 'en_us'
+	 * @return CmsContent the content model
+	 */
+	public function createContent($locale)
+	{
+		$content = new CmsContent();
+		$content->nodeId = $this->id;
+		$content->locale = $locale;
+		$content->save();
 		return $content;
 	}
 

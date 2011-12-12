@@ -125,4 +125,20 @@ class CmsContent extends CmsActiveRecord
 			),
 		));
 	}
+
+	/**
+	 * Creates an attachment for this content.
+	 * @param CUploadedFile $file the uploaded file instance
+	 */
+	public function createAttachment($file)
+	{
+		$attachment = new CmsAttachment();
+		$attachment->contentId = $this->id;
+		$attachment->extension = strtolower($file->getExtensionName());
+		$attachment->filename = $file->getName();
+		$attachment->mimeType = $file->getType();
+		$attachment->byteSize = $file->getSize();
+		$attachment->save();
+		$attachment->saveFile($file);
+	}
 }

@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset class="form-content">
 
     <?php echo $form->textFieldRow($model,'['.$model->locale.']heading',array('class'=>'span8')) ?>
 
@@ -19,7 +19,7 @@
 
 </fieldset>
 
-<fieldset>
+<fieldset class="form-page-settings">
 
 	<legend><?php echo Yii::t('CmsModule.core','Page settings') ?></legend>
 	
@@ -31,6 +31,8 @@
 
 	<?php echo $form->textFieldRow($model,'['.$model->locale.']breadcrumb',array('class'=>'span8')) ?>
 
+	<?php echo $form->textFieldRow($model,'['.$model->locale.']breadcrumb',array('class'=>'span8')) ?>
+
     <?php echo $form->textFieldRow($model,'['.$model->locale.']metaTitle',array('class'=>'span8')) ?>
 
     <?php echo $form->textAreaRow($model,'['.$model->locale.']metaDescription',array('class'=>'span8','rows'=>3)) ?>
@@ -39,7 +41,7 @@
 
 </fieldset>
 
-<fieldset>
+<fieldset class="form-attachments">
 
     <legend><?php echo Yii::t('CmsModule.core', 'Attachments') ?></legend>
 

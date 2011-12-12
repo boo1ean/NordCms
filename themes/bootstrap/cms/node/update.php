@@ -1,72 +1,50 @@
 <?php $this->breadcrumbs = array(
-	$model->heading=>$model->getUrl(),
+	$model->breadcrumb=>$model->getUrl(),
 	Yii::t('CmsModule.core','Update'),
 ) ?>
 
-<div class="cms node-update">
+<div class="node-update">
 
-	<div class="row">
+	<h1><?php echo Yii::t('CmsModule.core','Update node') ?></h1>
 
-		<div class="span12">
+	<?php $form = $this->beginWidget('ext.bootstrap.widgets.BootActiveForm',array(
+		'id'=>'cmsUpdateNodeForm',
+		//'enableAjaxValidation'=>true,
+		'stacked'=>true,
+		'htmlOptions'=>array('enctype'=>'multipart/form-data'),
+	)) ?>
 
-			<div class="form">
+		<fieldset>
 
-				<h1><?php echo Yii::t('CmsModule.core','Update node') ?></h1>
+			<?php echo $form->uneditableRow($model,'name',array('hint'=>Yii::t('CmsModule.core','Node name cannot be changed.'))) ?>
 
-				<?php $form = $this->beginWidget('ext.bootstrap.widgets.BootActiveForm',array(
-					'id'=>'cmsNodeForm',
-					//'enableAjaxValidation'=>true,
-					'stacked'=>true,
-					'htmlOptions'=>array('enctype'=>'multipart/form-data'),
-				)) ?>
+		</fieldset>
 
-					<?php $tabs = array();
-					foreach ($translations as $locale => $content) {
-						$language = Yii::app()->cms->languages[$locale];
-						$tab = $this->renderPartial('_form',array(
-							'model'=>$content,
-							'form'=>$form,
-							'node'=>$model,
-							'language'=>$language,
-						), true);
-						$tabs[$language] = $tab;
-					} ?>
+		<?php $tabs = array();
+		foreach ($translations as $locale => $content) {
+			$language = Yii::app()->cms->languages[$locale];
+			$tab = $this->renderPartial('_form',array(
+				'model'=>$content,
+				'form'=>$form,
+				'node'=>$model,
+				'language'=>$language,
+			), true);
+			$tabs[$language] = $tab;
+		} ?>
 
-					<?php $this->widget('ext.bootstrap.widgets.BootTabs',array(
-						'tabs'=>$tabs,
-					)); ?>
+		<?php $this->widget('ext.bootstrap.widgets.BootTabs',array(
+			'tabs'=>$tabs,
+		)); ?>
 
-					<div class="actions clearfix">
-						<div class="pull-left">
-							<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Save'),array('class'=>'btn primary')) ?>
-						</div>
-						<div class="pull-right">
-							<?php echo CHtml::link(Yii::t('CmsModule.core','Delete'),array('delete','id'=>$model->id),array('class'=>'btn')) ?>
-						</div>
-					</div>
-
-				<?php $this->endWidget() ?>
-
+		<div class="actions clearfix">
+			<div class="pull-left">
+				<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Save'),array('class'=>'btn primary')) ?>
 			</div>
-
+			<div class="pull-right">
+				<?php echo CHtml::link(Yii::t('CmsModule.core','Delete'),array('delete','id'=>$model->id),array('class'=>'btn')) ?>
+			</div>
 		</div>
 
-		<div class="span4">
-
-			<div class="sidebar">
-
-				<h3><?php echo Yii::t('CmsModule.core','Nodes') ?></h3>
-
-				<ul class="nodes">
-					<?php foreach (CmsNode::model()->findAll() as $node): ?>
-						<li><?php echo CHtml::link($node->name, array('node/update','id'=>$node->id)) ?></li>
-					<?php endforeach ?>
-				</ul>
-
-			</div>
-
-		</div>
-
-	</div>
+	<?php $this->endWidget() ?>
 
 </div>

@@ -12,6 +12,10 @@ class NodeController extends CmsController
 	 * @property string the name of the default action
 	 */
 	public $defaultAction = 'view';
+	/**
+	 * @string string the layout to use with this controller
+	 */
+	public $layout = 'cms';
 
 	/**
 	 * @return array the action filters for this controller.
@@ -39,17 +43,12 @@ class NodeController extends CmsController
 			$content = $model->getContent($language);
 
 			if ($content === null)
-			{
-				$content = new CmsContent();
-				$content->nodeId = $model->id;
-				$content->locale = $language;
-				$content->save(false);
-			}
+				$content = $model->createContent($language);
 
 			$translations[$language] = $content;
 		}
 
-		if (isset($_POST['CmsNode']) && isset($_POST['CmsContent']))
+		if (isset($_POST['CmsContent']))
 		{
 			$valid = true;
 			foreach ($translations as $language => $content)
@@ -59,23 +58,13 @@ class NodeController extends CmsController
 				$valid = $valid && $content->validate();
 
 				if ($upload !== null)
-				{
-					$attachment = new CmsAttachment();
-					$attachment->contentId = $content->id;
-					$attachment->extension = strtolower($upload->getExtensionName());
-					$attachment->filename = $upload->getName();
-					$attachment->mimeType = $upload->getType();
-					$attachment->byteSize = $upload->getSize();
-					$attachment->save(false);
-					$attachment->saveFile($upload);
-				}
+					$content->createAttachment($upload);
 
 				$translations[$language] = $content;
 			}
 
 			if ($valid)
 			{
-				$model->attributes = $_POST['CmsNode'];
 				$model->save(); // we need to save the node so that the updated column is updated
 
 				foreach ($translations as $content)
@@ -86,12 +75,8 @@ class NodeController extends CmsController
 			}
 		}
 
-		$parents = CMap::mergeArray(array(''=>Yii::t('CmsModule.core','Select parent').' ...'),
-				CHtml::listData(CmsNode::model()->findAll('id!=:id',array(':id'=>$model->id)),'id','name'));
-
 		$this->render('update', array(
 			'model'=>$model,
-			'parents'=>$parents,
 			'translations'=>$translations,
 		));
 	}
@@ -112,6 +97,10 @@ class NodeController extends CmsController
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : Yii::app()->homeUrl);
 	}
 
+	/**
+	 * Displays a particular page.
+	 * @param $id the id of the model to display
+	 */
 	public function actionPage($id)
 	{
 		$app = Yii::app();
@@ -135,6 +124,8 @@ class NodeController extends CmsController
 
             $this->breadcrumbs = array($model->breadcrumb);
 		}
+
+		$this->layout = $app->cms->appLayout;
 
 		$this->render('page', array(
 			'model'=>$model,

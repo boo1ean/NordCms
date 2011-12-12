@@ -16,7 +16,7 @@
         )) ?>
         <?php echo $form->error($model,'['.$model->locale.']body') ?>
 		<div class="tags">
-			<?php $this->renderPartial('cms.views.node._tags'); ?>
+			<?php $this->renderPartial('_tags'); ?>
 		</div>
     </div>
 
@@ -60,7 +60,7 @@
 
     <div class="row">
         <?php echo $form->labelEx($model,'['.$model->locale.']metaDescription') ?>
-        <?php echo $form->textArea($model,'['.$model->locale.']metaDescription') ?>
+        <?php echo $form->textArea($model,'['.$model->locale.']metaDescription',array('rows'=>3)) ?>
         <?php echo $form->error($model,'['.$model->locale.']metaDescription') ?>
     </div>
 
