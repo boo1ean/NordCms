@@ -1,6 +1,6 @@
 _Current version 0.9.0_
 
-CMS is a stand-alone module that provide the core CMS functionality such as multilingual content to any Yii project. CMS have been developed under the New BSD License, please see the LICENSE file.
+Nord CMS is a stand-alone module that provides the core content management functionality such as multilingual content to any Yii project. Nord CMS has been developed under the New BSD License, please see the LICENSE file.
 
 ##Links
 
@@ -12,7 +12,7 @@ CMS is a stand-alone module that provide the core CMS functionality such as mult
 
 * In place updating of nodes
 * Rendering of nodes as pages and widgets
-* Attaching of image and other files to nodes
+* Attaching of images and other files to nodes
 * Multilingual content
 * Search engine optimization for pages
 * Support for meta tags for pages
@@ -52,7 +52,7 @@ The cms application component supports the following configuration parameters:
 	'languages'=>array('en_us'=>'English'),
 	// the default language
 	'defaultLanguage'=>'en_us',
-	// the types of files that can uploaded as attachments
+	// the types of files that can be uploaded as attachments
 	'allowedFileTypes'=>'jpg, gif, png',
 	// the path to save the attachments
 	'attachmentPath'=>'/files/cms/attachments/',
@@ -81,7 +81,7 @@ Pages are created by linking to them. To create a page add the following to one 
 Yii::app()->cms->createUrl('foo');
 ~~~
 
-What the above code does it creates a node with the name 'foo' (if it doesn't already exist) and returns the URL to that node.
+The above code creates a node with the name 'foo' (if it doesn't already exist) and returns the URL to that node.
 
 You can also set the following page properties: URL, page title, meta title, meta description, meta keywords.
 
@@ -94,11 +94,9 @@ Blocks are created using the CmsBlock widget. To add a block add the following t
 <?php $this->widget('cms.widgets.CmsBlock',array('bar')) ?>
 ~~~
 
-Calling the block widget does the same as linking to a page. 
-
 ###Adding content to a node
 
-You can add content to your nodes by pressing the 'Update' below the content. Nodes have a set of properties that can be specified per language:
+Nodes have a set of properties that can be specified per language:
 
 * Heading - _the main heading_
 * Body - _the content_
