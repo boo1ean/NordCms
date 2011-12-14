@@ -21,16 +21,18 @@ Yii::import('cms.components.CmsActiveRecord');
  * @property integer $deleted
  *
  * The following relations are available for this model:
+ * @property CmsNode $parent
  * @property CmsContent $content
  * @property CmsContent[] $translations
  */
 class CmsNode extends CmsActiveRecord
 {
 	protected $_patterns = array(
-		'node'=>'/{{node:([\w\d]+)}}/i',
-		'link'=>'/{{([\w\d]+)\|([\w\d\s]+)}}/i',
-		'image'=>'/{{image:([\d]+)}}/i',
 		'file'=>'/{{file:([\d]+)}}/i',
+		'image'=>'/{{image:([\d]+)}}/i',
+		'link'=>'/{{([\w\d]+|https?:\/\/[\w\d_-]*(\.[\w\d_-]*)+.*)\|([\w\d\s-]+)}}/i',
+		'email'=>'/{{email:([\w\d!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[\w\d!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[\w\d](?:[\w\d-]*[\w\d])?\.)+[\w\d](?:[\w\d-]*[\w\d])?)}}/i',
+		'node'=>'/{{node:([\w\d]+)}}/i',
 	);
 
 	/**
@@ -70,6 +72,7 @@ class CmsNode extends CmsActiveRecord
 	public function relations()
 	{
 		return array(
+			'parent'=>array(self::BELONGS_TO, 'CmsNode', 'parentId'),
 			'translations'=>array(self::HAS_MANY, 'CmsContent', 'nodeId'),
 			'content'=>array(self::HAS_ONE, 'CmsContent', 'nodeId',
 					'condition'=>'locale=:locale', 'params'=>array(':locale'=>Yii::app()->language)),
@@ -85,8 +88,8 @@ class CmsNode extends CmsActiveRecord
 			'id' => Yii::t('CmsModule.core', 'Id'),
 			'created' => Yii::t('CmsModule.core', 'Created'),
 			'updated' => Yii::t('CmsModule.core', 'Updated'),
-			'parentId' => Yii::t('CmsModule.core', 'Parent'),
 			'name' => Yii::t('CmsModule.core', 'Name'),
+			'parentId' => Yii::t('CmsModule.core', 'Parent'),
 			'deleted' => Yii::t('CmsModule.core', 'Deleted'),
 		);
 	}
@@ -102,13 +105,158 @@ class CmsNode extends CmsActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('created',$this->created,true);
 		$criteria->compare('updated',$this->updated,true);
-		$criteria->compare('parentId',$this->parentId);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('parentId',$this->updated);
 		$criteria->compare('deleted',$this->deleted);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
+	}
+
+	/**
+	 * Returns the parent select options formatted as a tree.
+	 * @return array the options
+	 */
+	public function getParentOptionTree()
+	{
+		$nodes = CmsNode::model()->findAll();
+		$children = $this->getChildren($nodes, true);
+		$exclude = CMap::mergeArray(array($this->id), array_keys($children));
+		$nodes = CmsNode::model()->findAll('id NOT IN (:exclude)', array(':exclude'=>implode(',', $exclude)));
+
+		$tree = $this->getTree($nodes);
+
+		$options = array('0' => Yii::t('CmsModule.core', 'No parent'));
+		foreach ($tree as $branch)
+			$options = CMap::mergeArray($options, $this->getParentOptionBranch($branch));
+
+		return $options;
+	}
+
+	/**
+	 * Returns a single branch of the parent select option tree.
+	 * @param array $branch the branch
+	 * @param int $depth the depth of the branch
+	 * @return array the options
+	 */
+	protected function getParentOptionBranch($branch, $depth = 0)
+	{
+		$options = array();
+
+		$options[$branch['model']->id] = str_repeat('...', $depth + 1).' '.$branch['model']->name;
+
+		if (!empty($branch['children']))
+			foreach ($branch['children'] as $leaf)
+				$options = CMap::mergeArray($options, $this->getParentOptionBranch($leaf, $depth + 1));
+
+		return $options;
+	}
+
+	/**
+	 * Returns the given nodes as a tree.
+	 * @param CmsNode[] $nodes the nodes to process
+	 * @param bool $includeOrphans indicated whether to include nodes which parent has been deleted.
+	 * @return array the tree
+	 */
+	public function getTree($nodes, $includeOrphans = false)
+	{
+		$tree = $this->getBranch($nodes);
+
+		// Get the orphan nodes as well (i.e. those which parent has been deleted) if necessary.
+		if ($includeOrphans)
+			foreach($nodes as $node)
+				$tree[$node->id] = array('model'=>$node, 'children'=>$this->getBranch($nodes, $node->id));
+
+		return $tree;
+	}
+
+	/**
+	 * Returns the given nodes as a branch.
+	 * @param CmsNode[]$nodes the nodes to process
+	 * @param int $parentId the parent id
+	 * @return array the branch.
+	 */
+	protected function getBranch(&$nodes, $parentId = 0)
+	{
+		$children = array();
+		/** @var CmsNode $node */
+		foreach ($nodes as $idx => $node)
+		{
+			if ((int) $node->parentId === (int) $parentId)
+			{
+				$children[$node->id] = array('model'=>$node, 'children'=>$this->getBranch($nodes, $node->id));
+				unset($nodes[$idx]);
+			}
+		}
+
+		return $children;
+	}
+
+	/**
+	 * Returns the children for this node.
+	 * @param CmsNode[] $nodes the nodes to process
+	 * @param bool $recursive indicates whether to include grandchildren
+	 * @return CmsNode[] the children
+	 */
+	protected function getChildren(&$nodes, $recursive = false)
+	{
+		$children = array();
+
+		/** @var CmsNode $node */
+		foreach ($nodes as $idx => $node)
+		{
+			if ((int) $node->parentId === (int) $this->id)
+			{
+				$children[$node->id] = $node;
+				unset($nodes[$idx]);
+
+				if ($recursive)
+					$children = CMap::mergeArray($children, $node->getChildren($nodes, $recursive));
+			}
+		}
+
+		return $children;
+	}
+
+	/**
+	 * Renders the node tree.
+	 */
+	public function renderTree()
+	{
+		$nodes = CmsNode::model()->findAll();
+		$tree = $this->getTree($nodes, true);
+
+		echo CHtml::openTag('div', array('class'=>'node-tree'));
+		echo CHtml::openTag('ul', array('class'=>'root'));
+
+		foreach ($tree as $branch)
+			$this->renderBranch($branch);
+
+		echo '</ul>';
+		echo '</div>';
+	}
+
+	/**
+	 * Renders a single branch in the node tree.
+	 * @param $branch the branch.
+	 */
+	protected function renderBranch($branch)
+	{
+		echo '<li>';
+		echo CHtml::link($branch['model']->name, array('node/update','id'=>$branch['model']->id));
+
+		if (!empty($branch['children']))
+		{
+			echo CHtml::openTag('ul', array('class'=>'branch'));
+
+			foreach ($branch['children'] as $leaf)
+				$this->renderBranch($leaf);
+
+			echo '</ul>';
+		}
+
+		echo '</li>';
 	}
 
 	/**
@@ -118,8 +266,9 @@ class CmsNode extends CmsActiveRecord
 	public function render()
 	{
 		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->headingTemplate);
-		$content = str_replace('{{heading}}', $heading, $this->body);
+		$content = $this->renderHeading($heading, $this->body);
 		$content = $this->renderLinks($content);
+		$content = $this->renderEmails($content);
 		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
 		$content = $this->renderNodes($content);
@@ -134,8 +283,9 @@ class CmsNode extends CmsActiveRecord
 	public function renderWidget()
 	{
 		$heading = str_replace('{heading}', $this->heading, Yii::app()->cms->widgetHeadingTemplate);
-		$content = str_replace('{{heading}}', $heading, $this->body);
+		$content = $this->renderHeading($heading, $this->body);
 		$content = $this->renderLinks($content);
+		$content = $this->renderEmails($content);
 		$content = $this->renderImages($content);
 		$content = $this->renderAttachments($content);
 		$content = preg_replace($this->_patterns['node'], '', $content); // widgets do not render inline nodes
@@ -144,9 +294,20 @@ class CmsNode extends CmsActiveRecord
 	}
 
 	/**
+	 * Renders the heading for this node.
+	 * @param string $heading the heading to render
+	 * @param string $content the content being rendered
+	 * @return string the content
+	 */
+	protected function renderHeading($heading, $content)
+	{
+		return str_replace('{{heading}}', $heading, $content);
+	}
+
+	/**
 	 * Renders nodes within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderNodes($content)
 	{
@@ -170,8 +331,8 @@ class CmsNode extends CmsActiveRecord
 
 	/**
 	 * Renders links within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderLinks($content)
 	{
@@ -179,15 +340,27 @@ class CmsNode extends CmsActiveRecord
 		preg_match_all($this->_patterns['link'], $content, $matches);
 
 		$links = array();
-		foreach ($matches[1] as $index => $name)
+		foreach ($matches[1] as $index => $target)
 		{
-			/** @var CmsNode $node */
-			$node = Yii::app()->cms->loadNode($name);
-			if ($node instanceof CmsNode)
+			// If the target doesn't include 'http' it's treated as an internal link.
+			if (strpos($target, 'http') === false)
 			{
-				$text = $matches[2][$index];
-				$links[$index] = CHtml::link($text, $node->getUrl());
+				/** @var Cms $cms */
+				$cms = Yii::app()->cms;
+
+				/** @var CmsNode $node */
+				$node = $cms->loadNode($target);
+				if (!$node instanceof CmsNode)
+				{
+					$cms->createNode($target);
+					$node = $cms->loadNode($target);
+				}
+
+				$target = $node->getUrl();
 			}
+
+			$text = $matches[3][$index];
+			$links[$index] = CHtml::link($text, $target);
 		}
 
 		if (!empty($links))
@@ -196,10 +369,49 @@ class CmsNode extends CmsActiveRecord
 		return $content;
 	}
 
+	protected function renderEmails($content)
+	{
+		$matches = array();
+		preg_match_all($this->_patterns['email'], $content, $matches);
+
+		$mails = array();
+		foreach ($matches[1] as $index => $id)
+		{
+			$email = str_rot13($matches[1][$index]);
+			$mails[$index] = CHtml::mailto($email, $email, array(
+				'class'=>'email',
+				'rel'=>'nofollow',
+			));
+		}
+
+		if (!empty($mails))
+		{
+			$content = strtr($content, array_combine($matches[0], $mails));
+
+			$assetsUrl = Yii::app()->cms->getAssetsUrl();
+			Yii::app()->clientScript->registerScriptFile($assetsUrl.'/js/cms-rot13.js');
+			Yii::app()->clientScript->registerScript(__CLASS__.'#'.$this->id.'_emailObfuscation', "
+				(function($) {
+					$('.email').each(function() {
+						var element = $(this),
+							href = $(this).attr('href'),
+							address = Cms.Rot13.decode(href.substring(href.indexOf(':') + 1)),
+							value = Cms.Rot13.decode($(this).text());
+
+						element.attr('href', 'mailto:' + address);
+						element.text(value);
+					});
+				})(jQuery);
+			");
+		}
+
+		return $content;
+	}
+
 	/**
 	 * Renders images within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderImages($content)
 	{
@@ -227,8 +439,8 @@ class CmsNode extends CmsActiveRecord
 
 	/**
 	 * Renders attachments within this node.
-	 * @param $content the content being rendered.
-	 * @return string the rendered content.
+	 * @param string $content the content being rendered
+	 * @return string the content
 	 */
 	protected function renderAttachments($content)
 	{
@@ -255,6 +467,20 @@ class CmsNode extends CmsActiveRecord
 	}
 
 	/**
+	 * Creates content for this node.
+	 * @param string $locale the locale id, e.g. 'en_us'
+	 * @return CmsContent the content model
+	 */
+	public function createContent($locale)
+	{
+		$content = new CmsContent();
+		$content->nodeId = $this->id;
+		$content->locale = $locale;
+		$content->save();
+		return $content;
+	}
+
+	/**
 	 * Returns the associated content in a specific language.
 	 * @param string $locale the locale id, e.g. 'en_us'
 	 * @return CmsContent the content model
@@ -265,6 +491,31 @@ class CmsNode extends CmsActiveRecord
 			'nodeId'=>$this->id,
 			'locale'=>$locale,
 		));
+	}
+
+	/**
+	 * Returns the breadcrumb text for this node.
+	 * @param boolean $link indicates whether to return the breadcrumb as a link
+	 * @return string the breadcrumb text
+	 */
+	public function getBreadcrumbs($link = false)
+	{
+		$breadcrumbs = array();
+
+		if ($this->parent !== null)
+			$breadcrumbs = $this->parent->getBreadcrumbs(true); // get the parent as a link
+
+		if ($this->content !== null && !empty($this->content->breadcrumb))
+			$text = $this->content->breadcrumb;
+		else
+			$text = ucfirst($this->name);
+
+		if ($link)
+			$breadcrumbs[$text] = $this->getUrl();
+		else
+			$breadcrumbs[] = $text;
+
+		return $breadcrumbs;
 	}
 
 	/**
@@ -304,7 +555,7 @@ class CmsNode extends CmsActiveRecord
      */
     public function getHeading()
     {
-        return $this->content !== null && !empty($this->content->heading) ? $this->content->heading : $this->name;
+        return $this->content !== null && !empty($this->content->heading) ? $this->content->heading : ucfirst($this->name);
     }
 
     /**
@@ -322,15 +573,6 @@ class CmsNode extends CmsActiveRecord
 	 */
 	public function getPageTitle()
 	{
-		return $this->content !== null && !empty($this->content->pageTitle) ? $this->content->pageTitle : $this->name;
-	}
-
-	/**
-	 * Returns the breadcrumb text for this node.
-	 * @return string the breadcrumb text
-	 */
-	public function getBreadcrumb()
-	{
-		return $this->content !== null && !empty($this->content->breadcrumb) ? $this->content->breadcrumb : $this->name;
+		return $this->content !== null && !empty($this->content->pageTitle) ? $this->content->pageTitle : ucfirst($this->name);
 	}
 }

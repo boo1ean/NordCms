@@ -24,6 +24,10 @@ Unzip the extension to e.g. protected/modules/cms and add the following to your 
 
 ~~~
 [php]
+'imports'=>array(
+	.....
+	'application.modules.cms.CmsModule',
+),
 'modules'=>array(
 	.....
 	'cms',
@@ -36,7 +40,10 @@ Unzip the extension to e.g. protected/modules/cms and add the following to your 
 			.....
 			'page/<name>-<id:\d+>.html'=>'cms/node/page',
 		),
-	'cms'=>array('class'=>'cms.components.Cms'),
+	),
+	'cms'=>array(
+		'class'=>'cms.components.Cms'
+	),
 ),
 ~~~
 
@@ -62,6 +69,8 @@ The cms application component supports the following configuration parameters:
 	'widgetHeadingTemplate'=>'<h3 class="heading">\{heading\}</h3>',
 	// the template to use for page titles
 	'pageTitleTemplate'=>'\{title\} | \{appName\}',
+	// the application layout to use with the cms
+	'appLayout'=>'application.views.layouts.main',
 	// the name of the error flash message categories
 	'flashError'=>'error',
 	'flashInfo'=>'info',
@@ -87,38 +96,42 @@ You can also set the following page properties: URL, page title, meta title, met
 
 ###Creating a block
 
-Blocks are created using the CmsBlock widget. To add a block add the following to one of your views:
+Blocks are used for displaying Cms content within views and they can be created using the CmsBlock widget. To add a block, add the following code to one of your views:
 
 ~~~
 [php]
 <?php $this->widget('cms.widgets.CmsBlock',array('bar')) ?>
 ~~~
 
-Calling the block widget does the same as linking to a page. 
-
 ###Adding content to a node
 
-You can add content to your nodes by pressing the 'Update' below the content. Nodes have a set of properties that can be specified per language:
+If you have permissions to update Cms content an 'Update' link will be displayed below the content. Nodes have a set of properties that can be specified per language:
 
 * Heading - _the main heading_
 * Body - _the content_
 * Stylesheet - _stylesheet associated with the content_
 * URL - _the page URL (page/{url}-{id}.html)_
 * Page Title - _the page title_
+* Breadcrumb - _the breadcrumb text_
 * Meta Title - _the page meta title_
 * Meta Description - _the page meta description_
 * Meta Keywords - _the page meta keywords_
 
 Please note that the page properties are only used with pages.
 
+It is possible to create relations between nodes by setting the parent. This will help you organize your content and it will also automatically set the correct breadcrumbs.
+
 ###Editing content
 
-You can use various tags within the node body:
+You can use various tags within the body-field:
 
-* {heading} - _the main heading_
-* {image:id} - _displays an attached image_
-* {attachment:id} - _a link to an attached file_
-* {node:name} - _displays an inline node
+* {{heading}} - _the main heading_
+* {{image:id}} - _displays an attached image_
+* {{node:name}} - _displays an inline node
+* {{file:id}} - _creates a link to an attached file_
+* {{email:address}} - _creates a mailto link_
+* {{name|text}} - _creates an internal link_
+* {{address|text}} - _creates an external link_
 
 Please note that you cannot render inline nodes using the block widget.
 

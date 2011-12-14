@@ -7,8 +7,14 @@
  * @cssdoc version 1.0-pre
  */
 
+.cms .form-node,
+.cms .form-content,
+.cms .form-page-settings {
+	margin-bottom: 20px;
+}
+
 .cms .update-link {
-	margin-top: 10px;
+	margin: 10px 0;
 }
 
 .cms .markItUp {
@@ -27,10 +33,6 @@
 	float: right;
 }
 
-.cms .form {
-	border-right: 1px solid #ccc;
-}
-
 .cms .tags {
 	background-color: #eee;
 	margin-top: 10px;
@@ -41,4 +43,73 @@
 .cms .tags ul {
 	list-style-type: none;
 	margin: 0;
+	padding: 0;
+}
+
+/*
+	Blueprint style
+*/
+
+.cms.bp input[type="text"] {
+	width: 300px;
+}
+
+.cms.bp textarea {
+	width: 620px;
+}
+
+.cms.bp .ui-widget {
+	font-size: inherit;
+}
+
+.cms.bp .cms-content {
+	padding: 20px 0 20px 20px;
+}
+
+.cms.bp .cms-sidebar {
+	padding: 20px;
+}
+
+.cms.bp .markItUp {
+	width: 615px !important;
+}
+
+.cms.bp .markItUpEditor {
+	width: 613px !important;
+}
+
+.cms.bp .tags {
+	width: 585px;
+}
+
+/*
+	Bootstrap theme style
+*/
+
+.cms.boot form {
+	margin: 0 0 0 -20px;
+}
+
+.cms.boot .cms-content {
+	border-right: 1px solid #ccc;
+	padding: 20px 0 0 20px;
+}
+
+.cms.boot .cms-sidebar {
+	padding: 20px 20px 0 0;
+}
+
+.cms.boot .tags {
+	margin-bottom: 0;
+}
+
+.cms.boot .grid-view {
+	margin-bottom: 20px;
+}
+
+.cms.boot .actions {
+	border-radius: 0 0 0 6px;
+	-moz-border-radius: 0 0 0 6px;
+	-webkit-border-radius: 0 0 0 6px;
+	margin-bottom: 0;
 }

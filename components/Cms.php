@@ -27,22 +27,6 @@ class Cms extends CApplicationComponent
 	 */
 	public $defaultLanguage = 'en_us';
 	/**
-	 * @property string the flash message error category.
-	 */
-	public $flashError = 'error';
-	/**
-	 * @property string the flash message info category.
-	 */
-	public $flashInfo = 'info';
-	/**
-	 * @property string the flash message success category.
-	 */
-	public $flashSuccess = 'success';
-	/**
-	 * @property string the flash message warning category.
-	 */
-	public $flashWarning = 'warning';
-	/**
 	 * @property string the allowed attachment files types.
 	 */
 	public $allowedFileTypes = 'jpg, gif, png';
@@ -62,6 +46,26 @@ class Cms extends CApplicationComponent
 	 * @property string the template to use for page titles.
 	 */
 	public $pageTitleTemplate = '{title} | {appName}';
+	/**
+	 * @property string the application layout to use with the cms.
+	 */
+	public $appLayout = 'application.views.layouts.main';
+	/**
+	 * @property string the flash message error category.
+	 */
+	public $flashError = 'error';
+	/**
+	 * @property string the flash message info category.
+	 */
+	public $flashInfo = 'info';
+	/**
+	 * @property string the flash message success category.
+	 */
+	public $flashSuccess = 'success';
+	/**
+	 * @property string the flash message warning category.
+	 */
+	public $flashWarning = 'warning';
 
     protected $_assetsUrl;
 
@@ -79,7 +83,7 @@ class Cms extends CApplicationComponent
     * Returns the url to assets publishing the folder if necessary.
     * @return string the assets url
     */
-    protected function getAssetsUrl()
+    public function getAssetsUrl()
     {
         if ($this->_assetsUrl !== null)
             return $this->_assetsUrl;

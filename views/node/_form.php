@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset class="form-content">
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'['.$model->locale.']heading') ?>
@@ -16,7 +16,7 @@
         )) ?>
         <?php echo $form->error($model,'['.$model->locale.']body') ?>
 		<div class="tags">
-			<?php $this->renderPartial('cms.views.node._tags'); ?>
+			<?php $this->renderPartial('_tags'); ?>
 		</div>
     </div>
 
@@ -28,7 +28,7 @@
 
 </fieldset>
 
-<fieldset>
+<fieldset class="form-page-settings">
 
     <legend><?php echo Yii::t('CmsModule.core', 'Page settings') ?></legend>
 
@@ -60,7 +60,7 @@
 
     <div class="row">
         <?php echo $form->labelEx($model,'['.$model->locale.']metaDescription') ?>
-        <?php echo $form->textArea($model,'['.$model->locale.']metaDescription') ?>
+        <?php echo $form->textArea($model,'['.$model->locale.']metaDescription',array('rows'=>3)) ?>
         <?php echo $form->error($model,'['.$model->locale.']metaDescription') ?>
     </div>
 
@@ -72,7 +72,7 @@
 
 </fieldset>
 
-<fieldset>
+<fieldset class="form-attachments">
 
     <legend><?php echo Yii::t('CmsModule.core', 'Attachments') ?></legend>
 
