@@ -35,7 +35,8 @@ class NodeController extends CmsController
 	{
 		$cms = Yii::app()->cms;
 		$model = $this->loadModel($id);
-		$this->performAjaxValidation($model);
+
+		//$this->performAjaxValidation($model);
 
 		$translations = array();
 		foreach (array_keys($cms->languages) as $language)
@@ -122,7 +123,7 @@ class NodeController extends CmsController
 				'{appName}'=>Yii::app()->name,
 			));
 
-            $this->breadcrumbs = array($model->breadcrumb);
+            $this->breadcrumbs = $model->getBreadcrumbs();
 		}
 
 		$this->layout = $app->cms->appLayout;

@@ -83,7 +83,7 @@ class Cms extends CApplicationComponent
     * Returns the url to assets publishing the folder if necessary.
     * @return string the assets url
     */
-    protected function getAssetsUrl()
+    public function getAssetsUrl()
     {
         if ($this->_assetsUrl !== null)
             return $this->_assetsUrl;

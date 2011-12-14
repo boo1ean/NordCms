@@ -1,10 +1,10 @@
 <?php $this->beginContent(Yii::app()->cms->appLayout) ?>
 
-<div class="cms bp">
+<div class="cms boot">
 
-	<div class="clearfix">
+	<div class="row">
 
-		<div class="span-18">
+		<div class="span12">
 
 			<div class="cms-content">
 
@@ -14,7 +14,7 @@
 
 		</div>
 
-		<div class="span-6 last">
+		<div class="span4">
 
 			<div class="cms-sidebar">
 
