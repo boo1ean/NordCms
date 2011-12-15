@@ -1,11 +1,8 @@
-<?php $this->breadcrumbs = array(
-	$model->breadcrumb=>$model->getUrl(),
-	Yii::t('CmsModule.core','Update'),
-) ?>
+<?php $this->breadcrumbs = CMap::mergeArray($model->getBreadcrumbs(true), array(Yii::t('CmsModule.core','Update'))) ?>
 
 <div class="node-update">
 
-	<h1><?php echo Yii::t('CmsModule.core','Update node') ?></h1>
+    <h1><?php echo Yii::t('CmsModule.core','Update :name',array(':name'=>ucfirst($model->name))) ?></h1>
 
 	<?php $form = $this->beginWidget('ext.bootstrap.widgets.BootActiveForm',array(
 		'id'=>'cmsUpdateNodeForm',
@@ -17,6 +14,8 @@
 		<fieldset class="form-node">
 
 			<?php echo $form->uneditableRow($model,'name',array('hint'=>Yii::t('CmsModule.core','Node name cannot be changed.'))) ?>
+
+			<?php echo $form->dropDownListRow($model,'parentId',$model->getParentOptionTree()) ?>
 
 		</fieldset>
 
@@ -41,7 +40,10 @@
 				<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Save'),array('class'=>'btn primary')) ?>
 			</div>
 			<div class="pull-right">
-				<?php echo CHtml::link(Yii::t('CmsModule.core','Delete'),array('delete','id'=>$model->id),array('class'=>'btn')) ?>
+				<?php echo CHtml::link(Yii::t('CmsModule.core','Delete'),array('delete','id'=>$model->id),array(
+					'class'=>'btn',
+					'confirm'=>Yii::t('CmsModule.core','Are you sure you want to delete this node?'),
+				)) ?>
 			</div>
 		</div>
 

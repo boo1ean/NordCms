@@ -35,7 +35,8 @@ class NodeController extends CmsController
 	{
 		$cms = Yii::app()->cms;
 		$model = $this->loadModel($id);
-		$this->performAjaxValidation($model);
+
+		//$this->performAjaxValidation($model);
 
 		$translations = array();
 		foreach (array_keys($cms->languages) as $language)
@@ -48,7 +49,7 @@ class NodeController extends CmsController
 			$translations[$language] = $content;
 		}
 
-		if (isset($_POST['CmsContent']))
+		if (isset($_POST['CmsNode']) && isset($_POST['CmsContent']))
 		{
 			$valid = true;
 			foreach ($translations as $language => $content)
@@ -65,6 +66,7 @@ class NodeController extends CmsController
 
 			if ($valid)
 			{
+				$model->attributes = $_POST['CmsNode'];
 				$model->save(); // we need to save the node so that the updated column is updated
 
 				foreach ($translations as $content)
@@ -122,7 +124,7 @@ class NodeController extends CmsController
 				'{appName}'=>Yii::app()->name,
 			));
 
-            $this->breadcrumbs = array($model->breadcrumb);
+            $this->breadcrumbs = $model->getBreadcrumbs();
 		}
 
 		$this->layout = $app->cms->appLayout;

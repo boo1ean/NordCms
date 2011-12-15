@@ -20,11 +20,7 @@
 
 				<h3><?php echo Yii::t('CmsModule.core','Nodes') ?></h3>
 				
-				<ul class="nodes">
-					<?php foreach (CmsNode::model()->findAll() as $node): ?>
-						<li><?php echo CHtml::link($node->name, array('node/update','id'=>$node->id)) ?></li>
-					<?php endforeach ?>
-				</ul>
+				<?php echo CmsNode::model()->renderTree() ?>
 
 			</div>
 

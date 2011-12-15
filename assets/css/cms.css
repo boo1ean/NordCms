@@ -14,7 +14,7 @@
 }
 
 .cms .update-link {
-	margin-top: 10px;
+	margin: 10px 0;
 }
 
 .cms .markItUp {
@@ -87,7 +87,7 @@
 */
 
 .cms.boot form {
-	margin-left: -20px;
+	margin: 0 0 0 -20px;
 }
 
 .cms.boot .cms-content {
@@ -111,4 +111,5 @@
 	border-radius: 0 0 0 6px;
 	-moz-border-radius: 0 0 0 6px;
 	-webkit-border-radius: 0 0 0 6px;
+	margin-bottom: 0;
 }

@@ -1,10 +1,11 @@
 _Current version 0.9.0_
 
-Nord CMS is a stand-alone module that provides the core content management functionality such as multilingual content to any Yii project. Nord CMS has been developed under the New BSD License, please see the LICENSE file.
+Cms is a stand-alone module that provide the core CMS functionality such as multilingual content to any Yii project. Cms has been developed under the New BSD License, please see the LICENSE file.
 
 ##Links
 
-* [Discussion]()
+* [Try out the Demo](http://www.cniska.net/cmsdemo)
+* [Discussion](http://www.yiiframework.com/forum/index.php?/topic/26809-extension-nordcms)
 * [Report an issue](https://bitbucket.org/NordLabs/nordcms/issues/new)
 * [Fork on Bitbucket](https://bitbucket.org/NordLabs/nordcms)
 
@@ -12,7 +13,7 @@ Nord CMS is a stand-alone module that provides the core content management funct
 
 * In place updating of nodes
 * Rendering of nodes as pages and widgets
-* Attaching of images and other files to nodes
+* Attaching of image and other files to nodes
 * Multilingual content
 * Search engine optimization for pages
 * Support for meta tags for pages
@@ -20,10 +21,14 @@ Nord CMS is a stand-alone module that provides the core content management funct
 
 ##Setup
 
-Unzip the extension to e.g. protected/modules/cms and add the following to your application configuration:
+Unzip the extension under protected/modules/cms and add the following to your application configuration:
 
 ~~~
 [php]
+'imports'=>array(
+	.....
+	'application.modules.cms.CmsModule',
+),
 'modules'=>array(
 	.....
 	'cms',
@@ -36,7 +41,10 @@ Unzip the extension to e.g. protected/modules/cms and add the following to your 
 			.....
 			'page/<name>-<id:\d+>.html'=>'cms/node/page',
 		),
-	'cms'=>array('class'=>'cms.components.Cms'),
+	),
+	'cms'=>array(
+		'class'=>'cms.components.Cms'
+	),
 ),
 ~~~
 
@@ -52,8 +60,10 @@ The cms application component supports the following configuration parameters:
 	'languages'=>array('en_us'=>'English'),
 	// the default language
 	'defaultLanguage'=>'en_us',
-	// the types of files that can be uploaded as attachments
+	// the types of files that can uploaded as attachments
 	'allowedFileTypes'=>'jpg, gif, png',
+	// the maximum allowed filesize for attachments
+	'allowedFileSize'=>1024,
 	// the path to save the attachments
 	'attachmentPath'=>'/files/cms/attachments/',
 	// the template to use for node headings
@@ -62,6 +72,8 @@ The cms application component supports the following configuration parameters:
 	'widgetHeadingTemplate'=>'<h3 class="heading">\{heading\}</h3>',
 	// the template to use for page titles
 	'pageTitleTemplate'=>'\{title\} | \{appName\}',
+	// the application layout to use with the cms
+	'appLayout'=>'application.views.layouts.main',
 	// the name of the error flash message categories
 	'flashError'=>'error',
 	'flashInfo'=>'info',
@@ -81,13 +93,13 @@ Pages are created by linking to them. To create a page add the following to one 
 Yii::app()->cms->createUrl('foo');
 ~~~
 
-The above code creates a node with the name 'foo' (if it doesn't already exist) and returns the URL to that node.
+What the above code does it creates a node with the name 'foo' (if it doesn't already exist) and returns the URL to that node.
 
 You can also set the following page properties: URL, page title, meta title, meta description, meta keywords.
 
 ###Creating a block
 
-Blocks are created using the CmsBlock widget. To add a block add the following to one of your views:
+Blocks are used for displaying Cms content within views and they can be created using the CmsBlock widget. To add a block, add the following code to one of your views:
 
 ~~~
 [php]
@@ -96,35 +108,47 @@ Blocks are created using the CmsBlock widget. To add a block add the following t
 
 ###Adding content to a node
 
-Nodes have a set of properties that can be specified per language:
+If you have permissions to update Cms content an 'Update' link will be displayed below the content. Nodes have a set of properties that can be specified per language:
 
 * Heading - _the main heading_
 * Body - _the content_
 * Stylesheet - _stylesheet associated with the content_
 * URL - _the page URL (page/{url}-{id}.html)_
 * Page Title - _the page title_
+* Breadcrumb - _the breadcrumb text_
 * Meta Title - _the page meta title_
 * Meta Description - _the page meta description_
 * Meta Keywords - _the page meta keywords_
 
 Please note that the page properties are only used with pages.
 
+It is possible to create relations between nodes by setting the parent. This will help you organize your content and it will also automatically set the correct breadcrumbs.
+
 ###Editing content
 
-You can use various tags within the node body:
+You can use various tags within the body-field:
 
-* {heading} - _the main heading_
-* {image:id} - _displays an attached image_
-* {attachment:id} - _a link to an attached file_
-* {node:name} - _displays an inline node
+* {{heading}} - _the main heading_
+* {{image:id}} - _displays an attached image_
+* {{node:name}} - _displays an inline node
+* {{file:id}} - _creates a link to an attached file_
+* {{email:address}} - _creates a mailto link_
+* {{name|text}} - _creates an internal link_
+* {{address|text}} - _creates an external link_
 
 Please note that you cannot render inline nodes using the block widget.
 
+###Using Cms with Bootstrap
+
+Cms comes with view files that can be used with my [Bootstrap extension](http://www.yiiframework.com/extension/bootstrap).
+
+To enable the bootstrap theme you first need to download and setup Bootstrap. When you have Bootstrap up and running you need to copy the files in themes/bootstrap/views to you themes/views folder. If you're not familiar with Yii's theming, read more about it [here](http://www.yiiframework.com/doc/guide/1.1/en/topics.theming).
+
 ##What's next?
 
-* ?
+* Comming soon!
 
 ##Changes
 
-##Dec ?, 2011
+##Dec 15, 2011
 * Initial release

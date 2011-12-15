@@ -1,15 +1,11 @@
-<?php $this->breadcrumbs=array(
-	$model->breadcrumb=>$model->getUrl(),
-	Yii::t('CmsModule.core','Update'),
-) ?>
+<?php $this->breadcrumbs = CMap::mergeArray($model->getBreadcrumbs(true), array(Yii::t('CmsModule.core','Update'))) ?>
 
 <div class="node-update form">
 
-	<h1><?php echo Yii::t('CmsModule.core','Update node') ?></h1>
+	<h1><?php echo Yii::t('CmsModule.core','Update :name',array(':name'=>ucfirst($model->name))) ?></h1>
 
 	<?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'cmsUpdateNodeForm',
-		//'enableAjaxValidation'=>true,
 		'htmlOptions'=>array('enctype'=>'multipart/form-data')
 	)); ?>
 
@@ -20,6 +16,12 @@
 		        <span class="uneditable-input"><?php echo CHtml::encode($model->name) ?></span><br />
 				<span class="hint"><?php echo Yii::t('CmsModule.core','Node name cannot be changed.') ?></span>
 		    </div>
+
+			<div class="row">
+				<?php echo $form->label($model,'parentId') ?>
+				<?php echo $form->dropDownList($model,'parentId',$model->getParentOptionTree()) ?>
+				<?php echo $form->error($model,'parentId') ?>
+			</div>
 
 		</fieldset>
 
@@ -47,7 +49,10 @@
 				<?php echo CHtml::submitButton(Yii::t('CmsModule.core', 'Save')) ?>
 			</div>
 			<div class="pull-right">
-				<?php echo CHtml::link(Yii::t('CmsModule.core','Delete'),array('delete','id'=>$model->id)) ?>
+				<?php echo CHtml::link(Yii::t('CmsModule.core','Delete'),array('delete','id'=>$model->id),array(
+					'class'=>'btn',
+					'confirm'=>Yii::t('CmsModule.core','Are you sure you want to delete this node?'),
+				)) ?>
 			</div>
 		</div>
 
