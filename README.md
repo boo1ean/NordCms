@@ -1,23 +1,24 @@
 _Current version 0.9.0_
 
-Cms is a stand-alone module that provide the core CMS functionality such as multilingual content to any Yii project. Cms has been developed under the New BSD License, please see the LICENSE file.
+NordCms is a stand-alone module that provide the core CMS functionality such as multilingual content to any Yii project. NordCms has been developed under the New BSD License, please see the LICENSE file.
 
 ##Links
 
 * [Try out the Demo](http://www.cniska.net/cmsdemo)
-* [Discussion](http://www.yiiframework.com/forum/index.php?/topic/26809-extension-nordcms)
+* [Join the Discussion](http://www.yiiframework.com/forum/index.php?/topic/26809-extension-nordcms)
 * [Report an issue](https://bitbucket.org/NordLabs/nordcms/issues/new)
 * [Fork on Bitbucket](https://bitbucket.org/NordLabs/nordcms)
 
 ##What's included?
 
-* In place updating of nodes
-* Rendering of nodes as pages and widgets
-* Attaching of image and other files to nodes
+* In place content editing
+* Rendering of nodes as pages and/or widgets
+* Attachments such as images and other files
+* Custom tags to make content editing easier
+* Support for linking between Cms pages
 * Multilingual content
 * Search engine optimization for pages
-* Support for meta tags for pages
-* Theme for projects using Twitter's Bootstrap library
+* Theme that can be used with my Bootstrap extension
 
 ##Setup
 
@@ -39,7 +40,7 @@ Unzip the extension under protected/modules/cms and add the following to your ap
 		.....
 		'rules'=>array(
 			.....
-			'page/<name>-<id:\d+>.html'=>'cms/node/page',
+			'page/<name>-<id:\d+>.html'=>'cms/node/page', // clean URLs for pages
 		),
 	),
 	'cms'=>array(
@@ -48,12 +49,16 @@ Unzip the extension under protected/modules/cms and add the following to your ap
 ),
 ~~~
 
+Next you need to create the necessary database tables by running the schema.sql in the data folder.
+
 ###Configuration
 
 The cms application component supports the following configuration parameters:
+
 ~~~
 [php]
 'cms'=>array(
+	'class'=>'cms.components.Cms'
 	// the names of the web users with access to the cms
 	'users'=>array('admin'),
 	// the langauges enabled for the cms
@@ -81,6 +86,8 @@ The cms application component supports the following configuration parameters:
 	'flashWarning'=>'warning',
 ),
 ~~~
+
+**Please note that this is the component configuration, not the module.**
 
 ##Usage
 
@@ -138,9 +145,9 @@ You can use various tags within the body-field:
 
 Please note that you cannot render inline nodes using the block widget.
 
-###Using Cms with Bootstrap
+###Using NordCms with Bootstrap
 
-Cms comes with view files that can be used with my [Bootstrap extension](http://www.yiiframework.com/extension/bootstrap).
+NordCms comes with a theme that can be used with my [Bootstrap extension](http://www.yiiframework.com/extension/bootstrap).
 
 To enable the bootstrap theme you first need to download and setup Bootstrap. When you have Bootstrap up and running you need to copy the files in themes/bootstrap/views to you themes/views folder. If you're not familiar with Yii's theming, read more about it [here](http://www.yiiframework.com/doc/guide/1.1/en/topics.theming).
 
