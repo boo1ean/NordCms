@@ -50,6 +50,7 @@
 		<?php echo $form->labelEx($model,'['.$model->locale.']breadcrumb') ?>
 		<?php echo $form->textField($model,'['.$model->locale.']breadcrumb') ?>
 		<?php echo $form->error($model,'['.$model->locale.']breadcrumb') ?>
+        <p class="hint"><?php echo Yii::t('CmsModule.core','The breadcrumb text for this node.') ?></p>
 	</div>
 
     <div class="row">

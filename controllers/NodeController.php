@@ -28,6 +28,30 @@ class NodeController extends CmsController
 	}
 
 	/**
+	 * Displays the page to create a new model.
+	 */
+	public function actionCreate()
+	{
+		$cms = Yii::app()->cms;
+		$model = new CmsNode();
+
+		if (isset($_POST['CmsNode']))
+		{
+			$model->attributes = $_POST['CmsNode'];
+
+			if ($model->save())
+			{
+				Yii::app()->user->setFlash($cms->flashSuccess, Yii::t('CmsModule.core', 'Node created.'));
+				$this->redirect(array('update', 'id'=>$model->id));
+			}
+		}
+
+		$this->render('create', array(
+			'model'=>$model,
+		));
+	}
+
+	/**
 	 * Display the page to update a particular model.
 	 * @param $id the id of the model to be updated
 	 */
@@ -35,8 +59,6 @@ class NodeController extends CmsController
 	{
 		$cms = Yii::app()->cms;
 		$model = $this->loadModel($id);
-
-		//$this->performAjaxValidation($model);
 
 		$translations = array();
 		foreach (array_keys($cms->languages) as $language)

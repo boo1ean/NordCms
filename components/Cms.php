@@ -31,7 +31,7 @@ class Cms extends CApplicationComponent
 	 */
 	public $allowedFileTypes = 'jpg, gif, png';
     /**
-     * @property integer the maximum allowed filesize for attachments.
+     * @property integer the maximum allowed attachment file size in bytes.
      */
     public $allowedFileSize = 1024;
 	/**

@@ -22,6 +22,8 @@
 				
 				<?php echo CmsNode::model()->renderTree() ?>
 
+				<p><?php echo CHtml::link(Yii::t('CmsModule.core','Create a new node'),array('node/create')) ?></p>
+
 			</div>
 
 		</div>

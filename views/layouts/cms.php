@@ -21,6 +21,8 @@
 				<h3><?php echo Yii::t('CmsModule.core','Nodes') ?></h3>
 				
 				<?php echo CmsNode::model()->renderTree() ?>
+				
+				<p><?php echo CHtml::link(Yii::t('CmsModule.core','Create a new node'),array('node/create')) ?></p>
 
 			</div>
 

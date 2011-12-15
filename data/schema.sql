@@ -1,5 +1,5 @@
 /*
-	Cms database schema.
+	Cms database schematic.
 	Author Christoffer Niska <christoffer.niska@nordsoftware.com>
 	Copyright (c) 2011, Nord Software Ltd
  */
@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS `cms_node` (
   `deleted` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `name_deleted` (`name`,`deleted`)
+  UNIQUE INDEX `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `cms_content` (

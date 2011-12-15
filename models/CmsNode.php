@@ -21,9 +21,10 @@ Yii::import('cms.components.CmsActiveRecord');
  * @property integer $deleted
  *
  * The following relations are available for this model:
- * @property CmsNode $parent
- * @property CmsContent $content
- * @property CmsContent[] $translations
+ * @property CmsNode $parent the parent node
+ * @property CmsContent $content the content model for the current language
+ * @property CmsContent $default the content model for the default language
+ * @property CmsContent[] $translations the related content models
  */
 class CmsNode extends CmsActiveRecord
 {
@@ -76,6 +77,8 @@ class CmsNode extends CmsActiveRecord
 			'translations'=>array(self::HAS_MANY, 'CmsContent', 'nodeId'),
 			'content'=>array(self::HAS_ONE, 'CmsContent', 'nodeId',
 					'condition'=>'locale=:locale', 'params'=>array(':locale'=>Yii::app()->language)),
+			'default'=>array(self::HAS_ONE, 'CmsContent', 'nodeId',
+					'condition'=>'locale=:locale', 'params'=>array(':locale'=>Yii::app()->cms->defaultLanguage)),
 		);
 	}
 
@@ -121,9 +124,13 @@ class CmsNode extends CmsActiveRecord
 	public function getParentOptionTree()
 	{
 		$nodes = CmsNode::model()->findAll();
-		$children = $this->getChildren($nodes, true);
-		$exclude = CMap::mergeArray(array($this->id), array_keys($children));
-		$nodes = CmsNode::model()->findAll('id NOT IN (:exclude)', array(':exclude'=>implode(',', $exclude)));
+
+		if (!$this->isNewRecord)
+		{
+			$children = $this->getChildren($nodes, true);
+			$exclude = CMap::mergeArray(array($this->id), array_keys($children));
+			$nodes = CmsNode::model()->findAll('id NOT IN (:exclude)', array(':exclude'=>implode(',', $exclude)));
+		}
 
 		$tree = $this->getTree($nodes);
 
@@ -507,6 +514,8 @@ class CmsNode extends CmsActiveRecord
 
 		if ($this->content !== null && !empty($this->content->breadcrumb))
 			$text = $this->content->breadcrumb;
+		else if ($this->default !== null && !empty($this->default->breadcrumb))
+			$text = $this->default->breadcrumb;
 		else
 			$text = ucfirst($this->name);
 
@@ -546,7 +555,14 @@ class CmsNode extends CmsActiveRecord
 	 */
 	public function getContentUrl()
 	{
-		return $this->content !== null && !empty($this->content->url) ? urldecode($this->content->url) : $this->name;
+		if ($this->content !== null && !empty($this->content->url))
+		    $url = $this->content->url;
+	    else if ($this->default !== null && !empty($this->default->url))
+		    $url = $this->default->url;
+	    else
+		    $url = ucfirst($this->name);
+
+		return $url;
 	}
 
     /**
@@ -555,7 +571,14 @@ class CmsNode extends CmsActiveRecord
      */
     public function getHeading()
     {
-        return $this->content !== null && !empty($this->content->heading) ? $this->content->heading : ucfirst($this->name);
+	    if ($this->content !== null && !empty($this->content->heading))
+		    $heading = $this->content->heading;
+	    else if ($this->default !== null && !empty($this->default->heading))
+		    $heading = $this->default->heading;
+	    else
+		    $heading = ucfirst($this->name);
+
+	    return $heading;
     }
 
     /**
@@ -564,7 +587,14 @@ class CmsNode extends CmsActiveRecord
      */
     public function getBody()
     {
-        return $this->content !== null && !empty($this->content->body) ? $this->content->body : '';
+	    if ($this->content !== null && !empty($this->content->body))
+            $body = $this->content->body;
+        else if ($this->default !== null && !empty($this->default->body))
+            $body = $this->default->body;
+        else
+            $body = '';
+
+        return $body;
     }
 
 	/**
@@ -573,6 +603,13 @@ class CmsNode extends CmsActiveRecord
 	 */
 	public function getPageTitle()
 	{
-		return $this->content !== null && !empty($this->content->pageTitle) ? $this->content->pageTitle : ucfirst($this->name);
+		if ($this->content !== null && !empty($this->content->pageTitle))
+	        $pageTitle = $this->content->pageTitle;
+	    else if ($this->default !== null && !empty($this->default->pageTitle))
+	        $pageTitle = $this->default->pageTitle;
+	    else
+	        $pageTitle = ucfirst($this->name);
+
+		return $pageTitle;
 	}
 }

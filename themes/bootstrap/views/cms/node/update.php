@@ -35,7 +35,7 @@
 			'tabs'=>$tabs,
 		)); ?>
 
-		<div class="actions clearfix">
+		<div class="actions row">
 			<div class="pull-left">
 				<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Save'),array('class'=>'btn primary')) ?>
 			</div>
