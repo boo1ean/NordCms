@@ -30,9 +30,9 @@ class CmsNode extends CmsActiveRecord
 	protected $_patterns = array(
 		'file'=>'/{{file:([\d]+)}}/i',
 		'image'=>'/{{image:([\d]+)}}/i',
-		'link'=>'/{{([\w\d]+|https?:\/\/[\w\d_-]*(\.[\w\d_-]*)+.*)\|([\w\d\s-]+)}}/i',
+		'link'=>'/{{([\w\d\._-]+|https?:\/\/[\w\d_-]*(\.[\w\d_-]*)+.*)\|([\w\d\s-]+)}}/i',
 		'email'=>'/{{email:([\w\d!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[\w\d!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[\w\d](?:[\w\d-]*[\w\d])?\.)+[\w\d](?:[\w\d-]*[\w\d])?)}}/i',
-		'node'=>'/{{node:([\w\d]+)}}/i',
+		'node'=>'/{{node:([\w\d\._-]+)}}/i',
 	);
 
 	/**

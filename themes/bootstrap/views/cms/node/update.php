@@ -1,7 +1,8 @@
 <?php $this->breadcrumbs = CMap::mergeArray($model->getBreadcrumbs(true), array(Yii::t('CmsModule.core','Update'))) ?>
+
 <div class="node-update">
 
-	<h1><?php echo Yii::t('CmsModule.core','Update node') ?></h1>
+    <h1><?php echo Yii::t('CmsModule.core','Update :name',array(':name'=>ucfirst($model->name))) ?></h1>
 
 	<?php $form = $this->beginWidget('ext.bootstrap.widgets.BootActiveForm',array(
 		'id'=>'cmsUpdateNodeForm',

@@ -31,8 +31,6 @@
 
 	<?php echo $form->textFieldRow($model,'['.$model->locale.']breadcrumb',array('class'=>'span8')) ?>
 
-	<?php echo $form->textFieldRow($model,'['.$model->locale.']breadcrumb',array('class'=>'span8')) ?>
-
     <?php echo $form->textFieldRow($model,'['.$model->locale.']metaTitle',array('class'=>'span8')) ?>
 
     <?php echo $form->textAreaRow($model,'['.$model->locale.']metaDescription',array('class'=>'span8','rows'=>3)) ?>

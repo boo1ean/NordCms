@@ -30,6 +30,10 @@ class Cms extends CApplicationComponent
 	 * @property string the allowed attachment files types.
 	 */
 	public $allowedFileTypes = 'jpg, gif, png';
+    /**
+     * @property integer the maximum allowed filesize for attachments.
+     */
+    public $allowedFileSize = 1024;
 	/**
 	 * @property string the path for saving attached files.
 	 */
@@ -135,6 +139,10 @@ class Cms extends CApplicationComponent
 	 */
 	public function createNode($name)
 	{
+        // Validate the node name before creation.
+        if (preg_match('/^[\w\d\._-]+$/i', $name) === 0)
+            throw new CException(__CLASS__.': Failed to create node. Name "'.$name.'" is invalid.');
+
 		$node = new CmsNode();
 		$node->name = $name;
 		$node->save(false);

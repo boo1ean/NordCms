@@ -61,6 +61,8 @@ The cms application component supports the following configuration parameters:
 	'defaultLanguage'=>'en_us',
 	// the types of files that can uploaded as attachments
 	'allowedFileTypes'=>'jpg, gif, png',
+	// the maximum allowed filesize for attachments
+	'allowedFileSize'=>1024,
 	// the path to save the attachments
 	'attachmentPath'=>'/files/cms/attachments/',
 	// the template to use for node headings

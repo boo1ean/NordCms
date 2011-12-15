@@ -58,7 +58,7 @@ class CmsContent extends CmsActiveRecord
 			array('nodeId', 'length', 'max'=>10),
 			array('locale', 'length', 'max'=>50),
 			array('heading, url, pageTitle, breadcrumb, metaTitle, metaDescription, metaKeywords', 'length', 'max'=>255),
-			array('attachment', 'file', 'types'=>Yii::app()->cms->allowedFileTypes, 'maxSize'=>1024, 'allowEmpty'=>true),
+            array('attachment', 'file', 'types'=>Yii::app()->cms->allowedFileTypes, 'maxSize'=>Yii::app()->cms->allowedFileSize, 'allowEmpty'=>true),
 			array('body, css', 'filter', 'filter'=>array($obj = new CHtmlPurifier(), 'purify')),
 			array('id, nodeId, locale, heading, url, pageTitle, breadcrumb, metaTitle, metaDescription, metaKeywords', 'safe', 'on'=>'search'),
 		);

@@ -2,11 +2,10 @@
 
 <div class="node-update form">
 
-	<h1><?php echo Yii::t('CmsModule.core','Update node') ?></h1>
+	<h1><?php echo Yii::t('CmsModule.core','Update :name',array(':name'=>ucfirst($model->name))) ?></h1>
 
 	<?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'cmsUpdateNodeForm',
-		//'enableAjaxValidation'=>true,
 		'htmlOptions'=>array('enctype'=>'multipart/form-data')
 	)); ?>
 
