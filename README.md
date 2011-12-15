@@ -1,6 +1,6 @@
 _Current version 0.9.0_
 
-CMS is a stand-alone module that provide the core CMS functionality such as multilingual content to any Yii project. CMS have been developed under the New BSD License, please see the LICENSE file.
+Cms is a stand-alone module that provide the core CMS functionality such as multilingual content to any Yii project. Cms has been developed under the New BSD License, please see the LICENSE file.
 
 ##Links
 
@@ -138,9 +138,15 @@ You can use various tags within the body-field:
 
 Please note that you cannot render inline nodes using the block widget.
 
+###Using Cms with Bootstrap
+
+Cms comes with view files that can be used with my [Bootstrap extension](http://www.yiiframework.com/extension/bootstrap).
+
+To enable the bootstrap theme you first need to download and setup Bootstrap. When you have Bootstrap up and running you need to copy the files in themes/bootstrap/views to you themes/views folder. If you're not familiar with Yii's theming, read more about it [here](http://www.yiiframework.com/doc/guide/1.1/en/topics.theming).
+
 ##What's next?
 
-* ?
+* Comming soon!
 
 ##Changes
 
