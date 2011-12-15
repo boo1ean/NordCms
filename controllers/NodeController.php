@@ -49,7 +49,7 @@ class NodeController extends CmsController
 			$translations[$language] = $content;
 		}
 
-		if (isset($_POST['CmsContent']))
+		if (isset($_POST['CmsNode']) && isset($_POST['CmsContent']))
 		{
 			$valid = true;
 			foreach ($translations as $language => $content)
@@ -66,6 +66,7 @@ class NodeController extends CmsController
 
 			if ($valid)
 			{
+				$model->attributes = $_POST['CmsNode'];
 				$model->save(); // we need to save the node so that the updated column is updated
 
 				foreach ($translations as $content)

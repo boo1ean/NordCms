@@ -16,6 +16,7 @@ Yii::import('cms.components.CmsActiveRecord');
  * @property integer $id
  * @property string $created
  * @property string $updated
+ * @property integer $parentId
  * @property string $name
  * @property integer $deleted
  *
@@ -58,10 +59,10 @@ class CmsNode extends CmsActiveRecord
 	public function rules()
 	{
 		return array(
-			array('id, deleted', 'numerical', 'integerOnly'=>true),
+			array('id, parentId, deleted', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>255),
 			array('updated', 'safe'),
-			array('id, created, updated, name, deleted', 'safe', 'on'=>'search'),
+			array('id, created, updated, parentId, name, deleted', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -351,7 +352,7 @@ class CmsNode extends CmsActiveRecord
 				$node = $cms->loadNode($target);
 				if (!$node instanceof CmsNode)
 				{
-					$cms->createNode($target);					
+					$cms->createNode($target);
 					$node = $cms->loadNode($target);
 				}
 
@@ -360,6 +361,7 @@ class CmsNode extends CmsActiveRecord
 
 			$text = $matches[3][$index];
 			$links[$index] = CHtml::link($text, $target);
+		}
 
 		if (!empty($links))
 			$content = strtr($content, array_combine($matches[0], $links));
@@ -461,20 +463,6 @@ class CmsNode extends CmsActiveRecord
 		if (!empty($attachments))
 			$content = strtr($content, array_combine($matches[0], $attachments));
 
-		return $content;
-	}
-
-	/**
-	 * Creates content for this node.
-	 * @param string $locale the locale id, e.g. 'en_us'
-	 * @return CmsContent the content model
-	 */
-	public function createContent($locale)
-	{
-		$content = new CmsContent();
-		$content->nodeId = $this->id;
-		$content->locale = $locale;
-		$content->save();
 		return $content;
 	}
 
