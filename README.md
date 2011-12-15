@@ -4,7 +4,8 @@ CMS is a stand-alone module that provide the core CMS functionality such as mult
 
 ##Links
 
-* [Discussion]()
+* [Try out the Demo](http://www.cniska.net/cmsdemo)
+* [Discussion](http://www.yiiframework.com/forum/index.php?/topic/26809-extension-nordcms)
 * [Report an issue](https://bitbucket.org/NordLabs/nordcms/issues/new)
 * [Fork on Bitbucket](https://bitbucket.org/NordLabs/nordcms)
 
@@ -20,7 +21,7 @@ CMS is a stand-alone module that provide the core CMS functionality such as mult
 
 ##Setup
 
-Unzip the extension to e.g. protected/modules/cms and add the following to your application configuration:
+Unzip the extension under protected/modules/cms and add the following to your application configuration:
 
 ~~~
 [php]
@@ -143,5 +144,5 @@ Please note that you cannot render inline nodes using the block widget.
 
 ##Changes
 
-##Dec ?, 2011
+##Dec 15, 2011
 * Initial release
