@@ -1,24 +1,26 @@
 _Current version 0.9.0_
 
-NordCms is a stand-alone module that provide the core CMS functionality such as multilingual content to any Yii project. NordCms has been developed under the New BSD License, please see the LICENSE file.
+NordCms is a stand-alone module developed by Nord Software Ltd. This extension provides the core content management system functionality such as multilingual content and in place editing of content to any Yii project. NordCms is licensed under the New BSD License, please see the LICENSE file.
 
 ##Links
 
 * [Try out the Demo](http://www.cniska.net/cmsdemo)
 * [Join the Discussion](http://www.yiiframework.com/forum/index.php?/topic/26809-extension-nordcms)
 * [Report an issue](https://bitbucket.org/NordLabs/nordcms/issues/new)
-* [Fork on Bitbucket](https://bitbucket.org/NordLabs/nordcms)
+* [Fork us on Bitbucket](https://bitbucket.org/NordLabs/nordcms)
 
 ##What's included?
 
-* In place content editing
+* In place content editing using [MarkItUp](http://markitup.jaysalvat.com)
+* Custom tags for dynamic content
 * Rendering of nodes as pages and/or widgets
 * Attachments such as images and other files
-* Custom tags to make content editing easier
-* Support for linking between Cms pages
 * Multilingual content
 * Search engine optimization for pages
-* Theme that can be used with my Bootstrap extension
+* Support for both internal and external links
+* Theme that uses my [Bootstrap extension](http://www.yiiframework.com/extensions/bootstrap)
+
+For more detailed information please read the [Usage section](#hh4).
 
 ##Setup
 
@@ -72,11 +74,11 @@ The cms application component supports the following configuration parameters:
 	// the path to save the attachments
 	'attachmentPath'=>'/files/cms/attachments/',
 	// the template to use for node headings
-	'headingTemplate'=>'<h1 class="heading">\{heading\}</h1>',
+	'headingTemplate'=>'<h1 class="heading">{heading}</h1>',
 	// the template to use for widget headings
-	'widgetHeadingTemplate'=>'<h3 class="heading">\{heading\}</h3>',
+	'widgetHeadingTemplate'=>'<h3 class="heading">{heading}</h3>',
 	// the template to use for page titles
-	'pageTitleTemplate'=>'\{title\} | \{appName\}',
+	'pageTitleTemplate'=>'{title} | {appName}',
 	// the application layout to use with the cms
 	'appLayout'=>'application.views.layouts.main',
 	// the name of the error flash message categories
@@ -87,7 +89,7 @@ The cms application component supports the following configuration parameters:
 ),
 ~~~
 
-**Please note that this is the component configuration, not the module.**
+**Please note that this is the component configuration, NOT the module.**
 
 ##Usage
 
@@ -110,7 +112,7 @@ Blocks are used for displaying Cms content within views and they can be created 
 
 ~~~
 [php]
-<?php $this->widget('cms.widgets.CmsBlock',array('bar')) ?>
+<?php $this->widget('cms.widgets.CmsBlock',array('name'=>'bar')) ?>
 ~~~
 
 ###Adding content to a node
