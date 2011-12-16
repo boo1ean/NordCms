@@ -22,7 +22,7 @@
 				
 				<?php echo CmsNode::model()->renderTree() ?>
 
-				<p><?php echo CHtml::link(Yii::t('CmsModule.core','Create a new node'),array('node/create')) ?></p>
+				<p><?php echo CHtml::link(Yii::t('CmsModule.core','Create a new node'),array('node/create'),array('class'=>'btn small')) ?></p>
 
 			</div>
 
