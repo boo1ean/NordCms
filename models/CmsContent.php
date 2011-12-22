@@ -59,7 +59,7 @@ class CmsContent extends CmsActiveRecord
 			array('locale', 'length', 'max'=>50),
 			array('heading, url, pageTitle, breadcrumb, metaTitle, metaDescription, metaKeywords', 'length', 'max'=>255),
             array('attachment', 'file', 'types'=>Yii::app()->cms->allowedFileTypes, 'maxSize'=>Yii::app()->cms->allowedFileSize, 'allowEmpty'=>true),
-			array('body, css', 'filter', 'filter'=>array($obj = new CHtmlPurifier(), 'purify')),
+			array('body, css', 'filter', 'filter'=>array($this->getPurifier(), 'purify')),
 			array('id, nodeId, locale, heading, url, pageTitle, breadcrumb, metaTitle, metaDescription, metaKeywords', 'safe', 'on'=>'search'),
 		);
 	}
@@ -140,5 +140,18 @@ class CmsContent extends CmsActiveRecord
 		$attachment->byteSize = $file->getSize();
 		$attachment->save();
 		$attachment->saveFile($file);
+	}
+
+	/**
+	 * Returns the HTMLPurifier instance for this content.
+	 * @return CHtmlPurifier the purifier
+	 */
+	protected function getPurifier()
+	{
+		$purifier = new CHtmlPurifier();
+		$purifier->options = CMap::mergeArray(Yii::app()->cms->htmlPurifierOptions, array(
+			'Attr.EnableID'=>true, // we need to enable the id attribute
+		));
+		return $purifier;
 	}
 }

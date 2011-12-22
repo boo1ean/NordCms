@@ -15,59 +15,63 @@ Yii::import('cms.models.*');
 class Cms extends CApplicationComponent
 {
 	/**
-	 * @property array the names of the users that are allowed to updated the cms.
+	 * @var array the names of the users that are allowed to updated the cms.
 	 */
 	public $users = array('admin');
 	/**
-	 * @property array the languages that content can be translated in.
+	 * @var array the languages that content can be translated in.
 	 */
 	public $languages = array('en_us'=>'English');
 	/**
-	 * @property string the default locale.
+	 * @var string the default locale.
 	 */
 	public $defaultLanguage = 'en_us';
 	/**
-	 * @property string the allowed attachment files types.
+	 * @var string the allowed attachment files types.
 	 */
 	public $allowedFileTypes = 'jpg, gif, png';
     /**
-     * @property integer the maximum allowed attachment file size in bytes.
+     * @var integer the maximum allowed attachment file size in bytes.
      */
     public $allowedFileSize = 1024;
 	/**
-	 * @property string the path for saving attached files.
+	 * @var string the path for saving attached files.
 	 */
 	public $attachmentPath = '/files/cms/attachments/';
 	/**
-	 * @property string the template to use for node headings.
+	 * @var string the template to use for node headings.
 	 */
 	public $headingTemplate = '<h1 class="heading">{heading}</h1>';
 	/**
-	 * @property string the template to use for widget headings.
+	 * @var string the template to use for widget headings.
 	 */
 	public $widgetHeadingTemplate = '<h3 class="heading">{heading}</h3>';
 	/**
-	 * @property string the template to use for page titles.
+	 * @var string the template to use for page titles.
 	 */
 	public $pageTitleTemplate = '{title} | {appName}';
 	/**
-	 * @property string the application layout to use with the cms.
+	 * @var string the application layout to use with the cms.
 	 */
 	public $appLayout = 'application.views.layouts.main';
 	/**
-	 * @property string the flash message error category.
+	 * @var array the HTML purifier options.
+	 */
+	public $htmlPurifierOptions = array();
+	/**
+	 * @var string the flash message error category.
 	 */
 	public $flashError = 'error';
 	/**
-	 * @property string the flash message info category.
+	 * @var string the flash message info category.
 	 */
 	public $flashInfo = 'info';
 	/**
-	 * @property string the flash message success category.
+	 * @var string the flash message success category.
 	 */
 	public $flashSuccess = 'success';
 	/**
-	 * @property string the flash message warning category.
+	 * @var string the flash message warning category.
 	 */
 	public $flashWarning = 'warning';
 

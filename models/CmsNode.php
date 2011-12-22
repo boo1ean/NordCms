@@ -31,7 +31,7 @@ class CmsNode extends CmsActiveRecord
 	protected $_patterns = array(
 		'file'=>'/{{file:([\d]+)}}/i',
 		'image'=>'/{{image:([\d]+)}}/i',
-		'link'=>'/{{([\w\d\._-]+|https?:\/\/[\w\d_-]*(\.[\w\d_-]*)+.*)\|([\w\d\s-]+)}}/i',
+		'link'=>'/{{(#?[\w\d\._-]+|https?:\/\/[\w\d_-]*(\.[\w\d_-]*)+.*)\|([\w\d\s-]+)}}/i',
 		'email'=>'/{{email:([\w\d!#$%&\'*+\\/=?^_`{|}~-]+(?:\.[\w\d!#$%&\'*+\\/=?^_`{|}~-]+)*@(?:[\w\d](?:[\w\d-]*[\w\d])?\.)+[\w\d](?:[\w\d-]*[\w\d])?)}}/i',
 		'node'=>'/{{node:([\w\d\._-]+)}}/i',
 	);
@@ -350,7 +350,7 @@ class CmsNode extends CmsActiveRecord
 		foreach ($matches[1] as $index => $target)
 		{
 			// If the target doesn't include 'http' it's treated as an internal link.
-			if (strpos($target, 'http') === false)
+			if (strpos($target, '#') !== 0 && strpos($target, 'http') === false)
 			{
 				/** @var Cms $cms */
 				$cms = Yii::app()->cms;

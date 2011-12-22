@@ -4,7 +4,7 @@
 
     <h1><?php echo Yii::t('CmsModule.core','Update :name',array(':name'=>ucfirst($model->name))) ?></h1>
 
-	<?php $form = $this->beginWidget('ext.bootstrap.widgets.BootActiveForm',array(
+	<?php $form = $this->beginWidget('BootActiveForm',array(
 		'id'=>'cmsUpdateNodeForm',
 		//'enableAjaxValidation'=>true,
 		'stacked'=>true,
