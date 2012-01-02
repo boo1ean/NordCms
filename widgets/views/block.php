@@ -4,7 +4,7 @@
 
 	<?php if (Yii::app()->cms->checkAccess()): ?>
 		<?php echo CHtml::link(Yii::t('CmsModule.core', 'Update'),
-				array('cms/node/update', 'id'=>$model->id), array('class'=>'update-link')) ?>
+				array('/cms/node/update', 'id'=>$model->id), array('class'=>'update-link')) ?>
 	<?php endif ?>
 
 </div>
