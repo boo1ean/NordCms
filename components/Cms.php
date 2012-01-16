@@ -84,7 +84,8 @@ class Cms extends CApplicationComponent
     {
         parent::init();
 
-        Yii::app()->getClientScript()->registerCssFile($this->getAssetsUrl().'/css/cms.css');
+        Yii::app()->clientScript->registerCssFile($this->getAssetsUrl().'/css/cms.css');
+        Yii::app()->clientScript->registerScriptFile($this->getAssetsUrl().'/js/es5-shim.min.js');
     }
 
     /**
