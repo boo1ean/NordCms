@@ -70,7 +70,7 @@ class CmsContent extends CmsActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => Yii::t('CmsModule.core', 'Id'),
+			'id' => '#',
 			'nodeId' => Yii::t('CmsModule.core', 'Node'),
 			'locale' => Yii::t('CmsModule.core', 'Locale'),
 			'heading' => Yii::t('CmsModule.core', 'Heading'),

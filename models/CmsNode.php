@@ -88,7 +88,7 @@ class CmsNode extends CmsActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => Yii::t('CmsModule.core', 'Id'),
+			'id' => '#',
 			'created' => Yii::t('CmsModule.core', 'Created'),
 			'updated' => Yii::t('CmsModule.core', 'Updated'),
 			'name' => Yii::t('CmsModule.core', 'Name'),
@@ -509,7 +509,11 @@ class CmsNode extends CmsActiveRecord
 	{
 		$breadcrumbs = array();
 
-		if ($this->parent !== null)
+		if ($this->parent === null) {
+			$breadcrumbs[Yii::t('CmsModule.core','Cms')] = array('admin/index');
+			$breadcrumbs[Yii::t('CmsModule.core','Nodes')] = array('node/index');
+		}
+		else
 			$breadcrumbs = $this->parent->getBreadcrumbs(true); // get the parent as a link
 
 		if ($this->content !== null && !empty($this->content->breadcrumb))

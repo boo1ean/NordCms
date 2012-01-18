@@ -62,10 +62,6 @@
 	font-size: inherit;
 }
 
-.cms.bp .cms-content {
-	padding: 20px 0 20px 20px;
-}
-
 .cms.bp .cms-sidebar {
 	padding: 20px;
 }
@@ -86,17 +82,8 @@
 	Bootstrap theme style
 */
 
-.cms.boot form {
-	margin: 0 0 0 -20px;
-}
-
-.cms.boot .cms-content {
+.cms.boot.column2 .cms-content {
 	border-right: 1px solid #ccc;
-	padding: 20px 0 0 20px;
-}
-
-.cms.boot .cms-sidebar {
-	padding: 20px 20px 0 0;
 }
 
 .cms.boot .tags {
@@ -108,8 +95,5 @@
 }
 
 .cms.boot .actions {
-	border-radius: 0 0 0 6px;
-	-moz-border-radius: 0 0 0 6px;
-	-webkit-border-radius: 0 0 0 6px;
 	margin-bottom: 0;
 }

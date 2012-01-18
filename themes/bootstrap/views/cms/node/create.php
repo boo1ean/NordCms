@@ -1,4 +1,7 @@
-<?php $this->breadcrumbs = array(Yii::t('CmsModule.core','Create node')) ?>
+<?php $this->breadcrumbs = array(
+	Yii::t('CmsModule.core','Cms')=>array('admin/index'),
+	Yii::t('CmsModule.core','Create node')
+) ?>
 
 <div class="node-create">
 

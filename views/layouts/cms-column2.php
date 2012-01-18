@@ -1,6 +1,6 @@
 <?php $this->beginContent(Yii::app()->cms->appLayout) ?>
 
-<div class="cms bp">
+<div class="cms bp column2">
 
 	<div class="clearfix">
 

@@ -1,6 +1,6 @@
 <?php $this->beginContent(Yii::app()->cms->appLayout) ?>
 
-<div class="cms boot">
+<div class="cms boot column2">
 
 	<div class="row">
 

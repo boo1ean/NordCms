@@ -49,4 +49,9 @@ class CmsModule extends CWebModule
 
 		return false;
 	}
+	
+	public function getVersion() 
+	{
+		return '0.9.1';	
+	}
 }

@@ -6,16 +6,18 @@
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @package cms.controllers
  */
+
 class NodeController extends CmsController
 {
+	/**
+	 * @property string the default layout for the controller view
+	 */
+	public $layout = 'cms-column2';
+
 	/**
 	 * @property string the name of the default action
 	 */
 	public $defaultAction = 'view';
-	/**
-	 * @string string the layout to use with this controller
-	 */
-	public $layout = 'cms';
 
 	/**
 	 * @return array the action filters for this controller.
@@ -102,6 +104,21 @@ class NodeController extends CmsController
 		$this->render('update', array(
 			'model'=>$model,
 			'translations'=>$translations,
+		));
+	}
+
+	public function actionIndex()
+	{
+		$nodeDp = new CActiveDataProvider('CmsNode', array(
+			'criteria'=>array(
+				'order'=>'parentId ASC, id ASC',
+			),
+		));
+
+		$this->layout = 'cms-column1';
+
+		$this->render('index', array(
+			'nodeDp'=>$nodeDp,
 		));
 	}
 

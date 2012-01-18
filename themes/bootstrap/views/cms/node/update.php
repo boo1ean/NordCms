@@ -1,4 +1,6 @@
-<?php $this->breadcrumbs = CMap::mergeArray($model->getBreadcrumbs(true), array(Yii::t('CmsModule.core','Update'))) ?>
+<?php $this->breadcrumbs = CMap::mergeArray($model->getBreadcrumbs(true), array(
+	Yii::t('CmsModule.core','Update'))
+) ?>
 
 <div class="node-update">
 

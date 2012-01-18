@@ -44,3 +44,20 @@ CREATE TABLE IF NOT EXISTS `cms_attachment` (
   PRIMARY KEY (`id`),
   KEY `contentId` (`contentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `cms_menu` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `created` timestamp NULL DEFAULT NULL,
+  `updated` timestamp NULL DEFAULT NULL,
+  `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `cms_menu_item` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `menuId` int(10) unsigned NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

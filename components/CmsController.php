@@ -16,7 +16,7 @@ class CmsController extends CController
 	/**
 	 * @property string the default layout for the controller view
 	 */
-	public $layout = '//layouts/column1';
+	public $layout = 'cms-column1';
 	/**
 	 * @property array context menu items
 	 */

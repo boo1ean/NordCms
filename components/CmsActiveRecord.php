@@ -14,75 +14,101 @@
 class CmsActiveRecord extends CActiveRecord
 {
 	/**
-	 * Actions to be taken before calling find.
+	 * @return array the default scope.
 	 */
-	public function beforeFind()
+	public function defaultScope()
 	{
+		$scope = parent::defaultScope();
+
 		if ($this->hasAttribute('deleted'))
 		{
-			$alias = $this->getTableAlias();
-			$attribute = $alias.'.deleted';
-			$criteria = $this->getDbCriteria();
+			$prefix = $this->getTableAlias(true, false);
+			$condition = $prefix . '.deleted=0';
 
-			if (strpos($criteria->condition, $attribute) === false)
-			{
-				$criteria->addCondition($attribute.'=0');
-				$this->setDbCriteria($criteria);
-			}
+			if (isset($scope['condition']))
+				$scope['condition'] .= ' AND ' . $condition;
+			else
+				$scope['condition'] = $condition;
 		}
+
+		return $scope;
 	}
-	
+
 	/**
-     * Actions to be taken before saving the record.
-	 * @return boolean
-     */
-    public function beforeSave()
-    {
+	 * Actions to be taken before saving the record.
+	 * @return boolean whether the record can be saved
+	 */
+	public function beforeSave()
+	{
 		if (parent::beforeSave())
 		{
 			$now = new CDbExpression('NOW()');
 			$userId = Yii::app()->user->id;
-			
-			// We are creating a new record.
+
 			if ($this->isNewRecord)
 			{
+				// We are creating a new record.
 				if ($this->hasAttribute('created'))
-				   $this->created = $now;
-				
+					$this->created = $now;
+
 				if ($this->hasAttribute('creatorId') && $userId !== null)
-				   $this->creatorId = $userId;
+					$this->creatorId = $userId;
 			}
-			// We are updating an existing record.
 			else
 			{
-				if ($this->hasAttribute('updated'))
-					$this->updated = $now;
-				
-				if ($this->hasAttribute('updaterId') && $userId !== null)
-				   $this->updaterId = $userId;
+				// We are updating an existing record.
+				if ($this->hasAttribute('modified'))
+					$this->modified = $now;
+
+				if ($this->hasAttribute('modifierId') && $userId !== null)
+					$this->modifierId = $userId;
 			}
 
 			return true;
 		}
 		else
 			return false;
-    }
+	}
 
 	/**
 	 * Actions to be taken before calling delete.
-	 * @return boolean
+	 * @param boolean $soft indicates whether to perform a "soft" delete
+	 * @return boolean whether the record can be deleted
 	 */
-	public function beforeDelete()
+	public function beforeDelete($soft)
 	{
-		if (parent::beforeDelete())
+		if (parent::beforeDelete() && $soft && $this->hasAttribute('deleted'))
 		{
-			if (!$this->hasAttribute('deleted'))
-				return true;
-
 			$this->deleted = 1;
 			$this->save(false);
+			return false;
 		}
+		else
+			return true;
+	}
 
-		return false;
+	/**
+	 * Deletes the row corresponding to this active record.
+	 * @param boolean $soft indicates whether to perform a "soft" delete
+	 * @return boolean whether the deletion is successful
+	 * @throws CException if the record is new
+	 */
+	public function delete($soft = true)
+	{
+		if (!$this->getIsNewRecord())
+		{
+			Yii::trace(get_class($this) . '.delete()', 'CmsActiveRecord');
+
+			if ($this->beforeDelete($soft))
+			{
+				$result = $this->deleteByPk($this->getPrimaryKey()) > 0;
+				$this->afterDelete();
+				return $result;
+			}
+			else
+				return false;
+		}
+		else
+			throw new CDbException('The active record cannot be deleted because it is new.');
 	}
 }

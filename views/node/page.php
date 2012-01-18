@@ -1,4 +1,4 @@
-<div class="cms bp">
+<div class="cms">
 
 	<div class="node-page">
 
@@ -6,7 +6,7 @@
 
 		<?php if (Yii::app()->cms->checkAccess()): ?>
 			<?php echo CHtml::link(Yii::t('CmsModule.core', 'Update'),
-					array('node/update', 'id'=>$model->id), array('class'=>'update-link')) ?>
+					array('node/update', 'id'=>$model->id), array('class'=>'btn small update-link')) ?>
 		<?php endif ?>
 
 	</div>
