@@ -14,6 +14,7 @@ Yii::import('cms.models.*');
  */
 class Cms extends CApplicationComponent
 {
+	// todo: consider moving the configurations to the module.
 	/**
 	 * @var array the names of the users that are allowed to updated the cms.
 	 */
@@ -49,15 +50,20 @@ class Cms extends CApplicationComponent
 	/**
 	 * @var string the template to use for page titles.
 	 */
-	public $pageTitleTemplate = '{title} | {appName}';
+	public $pageTitleTemplate = '{title} - {appName}';
 	/**
 	 * @var string the application layout to use with the cms.
 	 */
 	public $appLayout = 'application.views.layouts.main';
 	/**
+	 * @var array the renderer configuration.
+	 */
+	public $renderer = array('class'=>'cms.components.CmsBaseRenderer');
+	/**
 	 * @var array the HTML purifier options.
 	 */
 	public $htmlPurifierOptions = array();
+	// todo: do something about the flash message categories, an array maybe instead of 4 properties?
 	/**
 	 * @var string the flash message error category.
 	 */
@@ -84,8 +90,13 @@ class Cms extends CApplicationComponent
     {
         parent::init();
 
-        Yii::app()->clientScript->registerCssFile($this->getAssetsUrl().'/css/cms.css');
-        Yii::app()->clientScript->registerScriptFile($this->getAssetsUrl().'/js/es5-shim.min.js');
+		// Create the renderer.
+		$this->renderer = Yii::createComponent($this->renderer);
+
+		// Register the assets.
+		$assetsUrl = $this->getAssetsUrl();
+        Yii::app()->clientScript->registerCssFile($assetsUrl.'/css/cms.css');
+        Yii::app()->clientScript->registerScriptFile($assetsUrl.'/js/es5-shim.min.js');
     }
 
     /**
@@ -161,7 +172,7 @@ class Cms extends CApplicationComponent
 	public function isActive($name)
 	{
 		$node = $this->loadNode($name);
-		$controller = Yii::app()->controller;
+		$controller = Yii::app()->getController();
 		return $controller->module !== null
 				&& $controller->module->id === 'cms'
 				&& $controller->id === 'node'
