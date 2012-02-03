@@ -82,8 +82,7 @@ class CmsBaseRenderer extends CComponent
 		{
 			/** @var CmsNode $node */
 			$node = Yii::app()->cms->loadNode($name);
-			if ($node instanceof CmsNode)
-				$nodes[$index] = $node->renderWidget();
+			$nodes[$index] = $node instanceof CmsNode ? $node->renderWidget() : '';
 		}
 
 		if (!empty($nodes))
@@ -113,13 +112,7 @@ class CmsBaseRenderer extends CComponent
 
 				/** @var CmsNode $node */
 				$node = $cms->loadNode($target);
-				if (!$node instanceof CmsNode)
-				{
-					$cms->createNode($target);
-					$node = $cms->loadNode($target);
-				}
-
-				$target = $node->getUrl();
+				$target = $node instanceof CmsNode ? $node->getUrl() : '#';
 			}
 
 			$text = $matches[3][$index];

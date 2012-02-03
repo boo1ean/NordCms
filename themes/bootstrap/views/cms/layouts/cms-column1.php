@@ -4,7 +4,7 @@
 
 	<div class="row">
 
-		<div class="span16">
+		<div class="span12">
 
 			<div class="cms-content">
 

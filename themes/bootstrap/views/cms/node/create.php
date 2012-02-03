@@ -9,7 +9,6 @@
 
 	<?php $form = $this->beginWidget('BootActiveForm',array(
 		'id'=>'cmsCreateNodeForm',
-		'stacked'=>true,
 		'htmlOptions'=>array('enctype'=>'multipart/form-data'),
 	)) ?>
 
@@ -21,8 +20,8 @@
 
 		</fieldset>
 
-		<div class="actions">
-			<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Create'),array('class'=>'btn primary')) ?>
+		<div class="form-actions">
+			<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Create'),array('class'=>'btn btn-primary')) ?>
 		</div>
 
 	<?php $this->endWidget() ?>

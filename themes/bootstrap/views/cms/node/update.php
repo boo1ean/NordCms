@@ -9,7 +9,6 @@
 	<?php $form = $this->beginWidget('BootActiveForm',array(
 		'id'=>'cmsUpdateNodeForm',
 		//'enableAjaxValidation'=>true,
-		'stacked'=>true,
 		'htmlOptions'=>array('enctype'=>'multipart/form-data'),
 	)) ?>
 
@@ -37,9 +36,9 @@
 			'tabs'=>$tabs,
 		)); ?>
 
-		<div class="actions row">
+		<div class="form-actions row">
 			<div class="pull-left">
-				<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Save'),array('class'=>'btn primary')) ?>
+				<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Save'),array('class'=>'btn btn-primary')) ?>
 			</div>
 			<div class="pull-right">
 				<?php echo CHtml::link(Yii::t('CmsModule.core','Delete'),array('delete','id'=>$model->id),array(

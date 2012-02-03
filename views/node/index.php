@@ -19,7 +19,7 @@
 				'value'=>'$data->parent !== null ? $data->parent->name : ""',
 			),
 			array(
-				'class'=>'CButtonColumn',
+				'class'=>'BootButtonColumn',
 				'viewButtonUrl'=>'Yii::app()->cms->createUrl($data->name)',
 			),
 		),

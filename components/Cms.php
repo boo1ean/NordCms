@@ -129,13 +129,6 @@ class Cms extends CApplicationComponent
 	public function createUrl($name, $params=array())
 	{
 		$node = $this->loadNode($name);
-
-		if ($node === null)
-		{
-			$this->createNode($name);
-			$node = $this->loadNode($name);
-		}
-
 		return $node->getUrl($params);
 	}
 
@@ -146,7 +139,15 @@ class Cms extends CApplicationComponent
 	 */
 	public function loadNode($name)
 	{
-		return CmsNode::model()->findByAttributes(array('name'=>$name));
+		$node = CmsNode::model()->findByAttributes(array('name'=>$name));
+
+		if (!$node instanceof CmsNode)
+		{
+			$this->createNode($name);
+			$node = $this->loadNode($name);
+		}
+
+		return $node;
 	}
 
 	/**

@@ -4,7 +4,7 @@
 
 	<div class="row">
 
-		<div class="span12">
+		<div class="span9">
 
 			<div class="cms-content">
 
@@ -14,7 +14,7 @@
 
 		</div>
 
-		<div class="span4">
+		<div class="span3">
 
 			<div class="cms-sidebar">
 
@@ -22,7 +22,7 @@
 				
 				<?php echo CmsNode::model()->renderTree() ?>
 
-				<p><?php echo CHtml::link(Yii::t('CmsModule.core','Create a new node'),array('node/create'),array('class'=>'btn small')) ?></p>
+				<p><?php echo CHtml::link(Yii::t('CmsModule.core','Create a new node'),array('node/create'),array('class'=>'btn btn-small')) ?></p>
 
 			</div>
 

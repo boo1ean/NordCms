@@ -15,7 +15,7 @@
 		</div>
     </div>
 
-	<?php echo $form->textAreaRow($model,'['.$model->locale.']css',array('class'=>'span11','rows'=>6)) ?>
+	<?php echo $form->textAreaRow($model,'['.$model->locale.']css',array('class'=>'span8','rows'=>6)) ?>
 
 </fieldset>
 
@@ -66,7 +66,7 @@
 				'sortable'=>false,
 			),
             array(
-                'class'=>'CButtonColumn',
+                'class'=>'bootstrap.widgets.BootButtonColumn',
                 'template'=>'{delete}',
                 'buttons'=>array(
                     'delete'=>array(
