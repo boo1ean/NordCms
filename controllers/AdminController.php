@@ -12,14 +12,6 @@ class AdminController extends CmsController
 {
 	public function actionIndex()
 	{
-		$nodeDp = new CActiveDataProvider('CmsNode', array(
-			'criteria'=>array(
-				'order'=>'parentId ASC, id ASC',
-			),
-		));
-
-		$this->render('index', array(
-			'nodeDp'=>$nodeDp,
-		));
+		$this->render('index');
 	}
 }

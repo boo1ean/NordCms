@@ -10,7 +10,7 @@
 	<p><?php echo CHtml::link(Yii::t('CmsModule.core','Create a new node'),array('node/create'),array('class'=>'btn')) ?></p>
 
 	<?php $this->widget('bootstrap.widgets.BootGridView',array(
-		'dataProvider'=>$nodeDp,
+		'dataProvider'=>$model->search(),
 		'columns'=>array(
 			'id',
 			'name',

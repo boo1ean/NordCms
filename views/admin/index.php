@@ -8,6 +8,7 @@
 
 	<div class="nodes">
 		<h2><?php echo CHtml::link(Yii::t('CmsModule.core','Nodes'),array('node/index')); ?></h2>
+		<p><?php echo Yii::t('CmsModule.core','Administer nodes.'); ?></p>
 	</div>
 
 	<!--

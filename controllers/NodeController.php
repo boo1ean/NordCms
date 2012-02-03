@@ -109,16 +109,13 @@ class NodeController extends CmsController
 
 	public function actionIndex()
 	{
-		$nodeDp = new CActiveDataProvider('CmsNode', array(
-			'criteria'=>array(
-				'order'=>'parentId ASC, id ASC',
-			),
-		));
+		$model = new CmsNode('search');
+		$model->unsetAttributes();  // clear any default values
 
 		$this->layout = 'cms-column1';
 
 		$this->render('index', array(
-			'nodeDp'=>$nodeDp,
+			'model'=>$model,
 		));
 	}
 
