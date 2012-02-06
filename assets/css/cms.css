@@ -13,8 +13,18 @@
 	margin-bottom: 20px;
 }
 
+.cms .node-page,
+.cms.node-block {
+	position: relative;
+}
+
 .cms .update-link {
-	margin: 10px 0;
+	position: absolute;
+	right: 5px;
+	top: 5px;
+}
+
+.cms.node-block .update-link {
 	padding: 3px 5px;
 }
 
