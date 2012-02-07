@@ -32,13 +32,13 @@
 			$tabs[$language] = $tab;
 		} ?>
 
-		<?php $this->widget('ext.bootstrap.widgets.BootTabs',array(
+		<?php $this->widget('bootstrap.widgets.BootTabbed',array(
 			'tabs'=>$tabs,
 		)); ?>
 
 		<div class="form-actions row">
 			<div class="pull-left">
-				<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Save'),array('class'=>'btn btn-primary')) ?>
+				<?php echo CHtml::htmlButton(Yii::t('CmsModule.core','Save'),array('class'=>'btn btn-primary')) ?>
 			</div>
 			<div class="pull-right">
 				<?php echo CHtml::link(Yii::t('CmsModule.core','Delete'),array('delete','id'=>$model->id),array(

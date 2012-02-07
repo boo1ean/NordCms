@@ -21,7 +21,7 @@
 		</fieldset>
 
 		<div class="form-actions">
-			<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Create'),array('class'=>'btn btn-primary')) ?>
+			<?php echo CHtml::htmlButton(Yii::t('CmsModule.core','Create'),array('class'=>'btn btn-primary')) ?>
 		</div>
 
 	<?php $this->endWidget() ?>
