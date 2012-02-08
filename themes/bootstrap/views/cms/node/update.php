@@ -38,7 +38,10 @@
 
 		<div class="form-actions row">
 			<div class="pull-left">
-				<?php echo CHtml::htmlButton(Yii::t('CmsModule.core','Save'),array('class'=>'btn btn-primary')) ?>
+				<?php echo CHtml::htmlButton(Yii::t('CmsModule.core','Save'),array(
+					'class'=>'btn btn-primary',
+					'type'=>'submit',
+				)) ?>
 			</div>
 			<div class="pull-right">
 				<?php echo CHtml::link(Yii::t('CmsModule.core','Delete'),array('delete','id'=>$model->id),array(
