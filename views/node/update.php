@@ -25,6 +25,16 @@
 				<?php echo $form->error($model,'parentId') ?>
 			</div>
 
+			<div class="row">
+				<?php echo $form->radioButtonList($model,'level',$model->getLevelOptions()) ?>
+				<?php echo $form->error($model,'level') ?>
+			</div>
+
+			<div class="row">
+				<?php echo $form->checkBox($model,'published') ?>
+				<?php echo $form->error($model,'published') ?>
+			</div>
+
 		</fieldset>
 
 		<?php $tabs = array();

@@ -14,9 +14,9 @@
 
 		<fieldset class="form-node">
 
-			<?php echo $form->textFieldRow($model,'name',array('hint'=>Yii::t('CmsModule.core','Node name cannot be changed after creation.'))) ?>
-
+			<?php echo $form->textFieldRow($model,'name',array('hint'=>Yii::t('CmsModule.core','Node name cannot be changed afterwards.'))) ?>
 			<?php echo $form->dropDownListRow($model,'parentId',$model->getParentOptionTree()) ?>
+			<?php echo $form->radioButtonListInlineRow($model,'level',$model->getLevelOptions()) ?>
 
 		</fieldset>
 

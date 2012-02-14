@@ -191,7 +191,7 @@ class NodeController extends CmsController
 				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 		}
 		else
-			throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+			throw new CHttpException(400, Yii::t('CmsModule.core', 'Invalid request. Please do not repeat this request again.'));
 	}
 
 	/**
@@ -205,7 +205,7 @@ class NodeController extends CmsController
 		$model = CmsNode::model()->findByPk($id, 'deleted=0');
 
 		if ($model === null)
-			throw new CHttpException(404, 'The requested page does not exist.');
+			throw new CHttpException(404, Yii::t('CmsModule.core', 'The requested page does not exist.'));
 
 		return $model;
 	}

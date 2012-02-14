@@ -167,18 +167,33 @@ class Cms extends CApplicationComponent
 
 	/**
 	 * Returns whether a specific page is active.
-	 * @param $name the content name
-	 * @return boolean
+	 * @param string $name the content name
+	 * @return boolean the result
 	 */
 	public function isActive($name)
 	{
 		$node = $this->loadNode($name);
 		$controller = Yii::app()->getController();
-		return $controller->module !== null
+		return ($controller->module !== null
 				&& $controller->module->id === 'cms'
 				&& $controller->id === 'node'
 				&& $controller->action->id === 'page'
-				&& isset($_GET['id']) && $_GET['id'] === $node->id;
+				&& isset($_GET['id']) && $_GET['id'] === $node->id)
+				|| $this->isChildActive($node);
+	}
+
+	/**
+	 * Returns whether a child node of a specific page is active.
+	 * @param CmsNode $node the node
+	 * @return boolean the result
+	 */
+	protected function isChildActive($node)
+	{
+		foreach ($node->children as $child)
+			if ($this->isActive($child->name) || $this->isChildActive($child))
+				return true;
+
+		return false;
 	}
 
 	/**

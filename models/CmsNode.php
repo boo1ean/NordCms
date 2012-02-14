@@ -18,16 +18,22 @@ Yii::import('cms.components.CmsActiveRecord');
  * @property string $updated
  * @property integer $parentId
  * @property string $name
+ * @property string $level
+ * @property integer $published
  * @property integer $deleted
  *
  * The following relations are available for this model:
  * @property CmsNode $parent the parent node
+ * @property CmsNode[] $children the children nodes
  * @property CmsContent $content the content model for the current language
  * @property CmsContent $default the content model for the default language
  * @property CmsContent[] $translations the related content models
  */
 class CmsNode extends CmsActiveRecord
 {
+	const LEVEL_BLOCK = 'block';
+	const LEVEL_PAGE = 'page';
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className the class name
@@ -52,8 +58,8 @@ class CmsNode extends CmsActiveRecord
 	public function rules()
 	{
 		return array(
-			array('id, parentId, deleted', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>255),
+			array('id, parentId, published, deleted', 'numerical', 'integerOnly'=>true),
+			array('name, level', 'length', 'max'=>255),
 			array('updated', 'safe'),
 			array('id, created, updated, parentId, name, deleted', 'safe', 'on'=>'search'),
 		);
@@ -66,6 +72,7 @@ class CmsNode extends CmsActiveRecord
 	{
 		return array(
 			'parent'=>array(self::BELONGS_TO, 'CmsNode', 'parentId'),
+			'children'=>array(self::HAS_MANY, 'CmsNode', 'parentId'),
 			'translations'=>array(self::HAS_MANY, 'CmsContent', 'nodeId'),
 			'content'=>array(self::HAS_ONE, 'CmsContent', 'nodeId',
 					'condition'=>'locale=:locale', 'params'=>array(':locale'=>Yii::app()->language)),
@@ -85,7 +92,7 @@ class CmsNode extends CmsActiveRecord
 			'updated' => Yii::t('CmsModule.core', 'Updated'),
 			'name' => Yii::t('CmsModule.core', 'Name'),
 			'parentId' => Yii::t('CmsModule.core', 'Parent'),
-			'deleted' => Yii::t('CmsModule.core', 'Deleted'),
+			'level' => '',
 		);
 	}
 
@@ -102,7 +109,6 @@ class CmsNode extends CmsActiveRecord
 		$criteria->compare('updated',$this->updated,true);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('parentId',$this->updated);
-		$criteria->compare('deleted',$this->deleted);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -238,7 +244,7 @@ class CmsNode extends CmsActiveRecord
 
 	/**
 	 * Renders a single branch in the node tree.
-	 * @param $branch the branch
+	 * @param array $branch the branch
 	 */
 	protected function renderBranch($branch)
 	{
@@ -256,6 +262,18 @@ class CmsNode extends CmsActiveRecord
 		}
 
 		echo '</li>';
+	}
+
+	/**
+	 * Returns the level select options.
+	 * @return array the options
+	 */
+	public function getLevelOptions()
+	{
+		return array(
+			self::LEVEL_BLOCK=>Yii::t('CmsModule.core','Block'),
+			self::LEVEL_PAGE=>Yii::t('CmsModule.core','Page'),
+		);
 	}
 
 	/**
@@ -423,5 +441,10 @@ class CmsNode extends CmsActiveRecord
 	public function renderWidget()
 	{
 		return Yii::app()->cms->renderer->renderWidget($this);
+	}
+
+	public function getPublished()
+	{
+		return (bool) $this->published;
 	}
 }

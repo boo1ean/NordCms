@@ -26,6 +26,11 @@ class CmsPageFilter extends CFilter
 		if (isset($_GET['id']) && method_exists($controller, 'loadModel'))
 		{
 			$model = $controller->loadModel($_GET['id']);
+
+			// Prevent accessing of unpublished and block-level nodes.
+			if (!$model->published || $model->level !== CmsNode::LEVEL_PAGE)
+				throw new CHttpException(404, Yii::t('CmsModule.core', 'The requested page does not exist.'));
+
 			$url = $model->getUrl();
 
 			if (strpos(Yii::app()->request->getRequestUri(), $url) === false)

@@ -24,6 +24,11 @@
 			<?php echo $form->error($model,'parentId') ?>
 		</div>
 
+		<div class="row">
+			<?php echo $form->radioButtonList($model,'level',$model->getLevelOptions()) ?>
+			<?php echo $form->error($model,'level') ?>
+		</div>
+
 		<div class="row buttons">
 			<?php echo CHtml::submitButton(Yii::t('CmsModule.core', 'Create')) ?>
 		</div>

@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS `cms_node` (
   `updated` timestamp NULL DEFAULT NULL,
   `parentId` int(10) NOT NULL DEFAULT '0',
   `name` varchar(255) NOT NULL,
-  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  `level` varchar(255) NOT NULL DEFAULT 'page',
+  `published` tinyint(1) NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `name_deleted` (`name`,`deleted`)
   UNIQUE INDEX `name` (`name`)
