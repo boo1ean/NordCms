@@ -83,7 +83,8 @@ class CmsBaseRenderer extends CComponent
 		{
 			/** @var CmsNode $node */
 			$node = Yii::app()->cms->loadNode($name);
-			$pairs[$matches[0][$index]] = $node instanceof CmsNode ? $node->renderWidget() : '';
+			$pairs[$matches[0][$index]] = $node instanceof CmsNode && $node->level === CmsNode::LEVEL_BLOCK
+					? $node->renderWidget() : '';
 		}
 
 		if (!empty($pairs))
