@@ -38,8 +38,8 @@ class CmsMarkItUp extends CInputWidget
 		// Register the necessary scripts
 		$cs = $app->clientScript;
 		$cs->registerCoreScript('jquery');
-		$cs->registerScriptFile($assetPath.'/markitup/jquery.markitup.js');
-		$cs->registerScriptFile($assetPath.'/markitup/sets/'.$this->set.'/set.js');
+		$cs->registerScriptFile($assetPath.'/markitup/jquery.markitup.js', CClientScript::POS_END);
+		$cs->registerScriptFile($assetPath.'/markitup/sets/'.$this->set.'/set.js', CClientScript::POS_END);
 		$cs->registerCssFile($assetPath.'/markitup/sets/'.$this->set.'/style.css');
 		$cs->registerCssFile($assetPath.'/markitup/skins/'.$this->skin.'/style.css');
 
