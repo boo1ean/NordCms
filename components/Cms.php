@@ -96,7 +96,7 @@ class Cms extends CApplicationComponent
 		// Register the assets.
 		$assetsUrl = $this->getAssetsUrl();
         Yii::app()->clientScript->registerCssFile($assetsUrl.'/css/cms.css');
-        Yii::app()->clientScript->registerScriptFile($assetsUrl.'/js/es5-shim.min.js');
+        Yii::app()->clientScript->registerScriptFile($assetsUrl.'/js/es5-shim.js');
     }
 
     /**
