@@ -86,7 +86,7 @@ class CmsBaseRenderer extends CComponent
 			$pairs[$matches[0][$index]] = $node instanceof CmsNode ? $node->renderWidget() : '';
 		}
 
-		if (!empty($nodes))
+		if (!empty($pairs))
 			$content = strtr($content, $pairs);
 
 		return $content;
