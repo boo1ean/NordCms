@@ -13,8 +13,19 @@
 	margin-bottom: 20px;
 }
 
+.cms .node-page,
+.cms.node-block {
+	position: relative;
+}
+
 .cms .update-link {
-	margin: 10px 0;
+	position: absolute;
+	right: 5px;
+	top: 5px;
+}
+
+.cms.node-block .update-link {
+	padding: 3px 5px;
 }
 
 .cms .markItUp {
@@ -62,10 +73,6 @@
 	font-size: inherit;
 }
 
-.cms.bp .cms-content {
-	padding: 20px 0 20px 20px;
-}
-
 .cms.bp .cms-sidebar {
 	padding: 20px;
 }
@@ -86,17 +93,8 @@
 	Bootstrap theme style
 */
 
-.cms.boot form {
-	margin: 0 0 0 -20px;
-}
-
-.cms.boot .cms-content {
+.cms.boot.column2 .cms-content {
 	border-right: 1px solid #ccc;
-	padding: 20px 0 0 20px;
-}
-
-.cms.boot .cms-sidebar {
-	padding: 20px 20px 0 0;
 }
 
 .cms.boot .tags {
@@ -108,8 +106,5 @@
 }
 
 .cms.boot .actions {
-	border-radius: 0 0 0 6px;
-	-moz-border-radius: 0 0 0 6px;
-	-webkit-border-radius: 0 0 0 6px;
 	margin-bottom: 0;
 }

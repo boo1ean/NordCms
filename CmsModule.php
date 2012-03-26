@@ -10,7 +10,7 @@
 class CmsModule extends CWebModule
 {
 	/**
-	 * @property string the name of the default controller
+	 * @var string the name of the default controller
 	 */
 	public $defaultController = 'content';
 
@@ -19,6 +19,7 @@ class CmsModule extends CWebModule
 	 */
 	public function init()
 	{
+		// Register module imports.
 		$this->setImport(array(
 			'cms.components.*',
 			'cms.models.*',
@@ -27,9 +28,9 @@ class CmsModule extends CWebModule
 
 	/**
 	 * Performs access check to this module.
-	 * @param CController $controller the controller to be accessed.
-	 * @param CAction $action the action to be accessed.
-	 * @return boolean whether the action should be executed.
+	 * @param CController $controller the controller to be accessed
+	 * @param CAction $action the action to be accessed
+	 * @return boolean whether the action should be executed
 	 */
 	public function beforeControllerAction($controller, $action)
 	{
@@ -48,5 +49,10 @@ class CmsModule extends CWebModule
 		}
 
 		return false;
+	}
+	
+	public function getVersion() 
+	{
+		return '0.9.1';	
 	}
 }

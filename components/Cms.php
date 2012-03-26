@@ -14,6 +14,7 @@ Yii::import('cms.models.*');
  */
 class Cms extends CApplicationComponent
 {
+	// todo: consider moving the configurations to the module.
 	/**
 	 * @var array the names of the users that are allowed to updated the cms.
 	 */
@@ -49,15 +50,20 @@ class Cms extends CApplicationComponent
 	/**
 	 * @var string the template to use for page titles.
 	 */
-	public $pageTitleTemplate = '{title} | {appName}';
+	public $pageTitleTemplate = '{title} - {appName}';
 	/**
 	 * @var string the application layout to use with the cms.
 	 */
 	public $appLayout = 'application.views.layouts.main';
 	/**
+	 * @var array the renderer configuration.
+	 */
+	public $renderer = array('class'=>'cms.components.CmsBaseRenderer');
+	/**
 	 * @var array the HTML purifier options.
 	 */
 	public $htmlPurifierOptions = array();
+	// todo: do something about the flash message categories, an array maybe instead of 4 properties?
 	/**
 	 * @var string the flash message error category.
 	 */
@@ -84,7 +90,13 @@ class Cms extends CApplicationComponent
     {
         parent::init();
 
-        Yii::app()->getClientScript()->registerCssFile($this->getAssetsUrl().'/css/cms.css');
+		// Create the renderer.
+		$this->renderer = Yii::createComponent($this->renderer);
+
+		// Register the assets.
+		$assetsUrl = $this->getAssetsUrl();
+        Yii::app()->clientScript->registerCssFile($assetsUrl.'/css/cms.css');
+        Yii::app()->clientScript->registerScriptFile($assetsUrl.'/js/es5-shim.js');
     }
 
     /**
@@ -117,13 +129,6 @@ class Cms extends CApplicationComponent
 	public function createUrl($name, $params=array())
 	{
 		$node = $this->loadNode($name);
-
-		if ($node === null)
-		{
-			$this->createNode($name);
-			$node = $this->loadNode($name);
-		}
-
 		return $node->getUrl($params);
 	}
 
@@ -134,7 +139,15 @@ class Cms extends CApplicationComponent
 	 */
 	public function loadNode($name)
 	{
-		return CmsNode::model()->findByAttributes(array('name'=>$name));
+		$node = CmsNode::model()->findByAttributes(array('name'=>$name));
+
+		if (!$node instanceof CmsNode)
+		{
+			$this->createNode($name);
+			$node = $this->loadNode($name);
+		}
+
+		return $node;
 	}
 
 	/**
@@ -154,18 +167,33 @@ class Cms extends CApplicationComponent
 
 	/**
 	 * Returns whether a specific page is active.
-	 * @param $name the content name
-	 * @return boolean
+	 * @param string $name the content name
+	 * @return boolean the result
 	 */
 	public function isActive($name)
 	{
 		$node = $this->loadNode($name);
-		$controller = Yii::app()->controller;
-		return $controller->module !== null
+		$controller = Yii::app()->getController();
+		return ($controller->module !== null
 				&& $controller->module->id === 'cms'
 				&& $controller->id === 'node'
 				&& $controller->action->id === 'page'
-				&& isset($_GET['id']) && $_GET['id'] === $node->id;
+				&& isset($_GET['id']) && $_GET['id'] === $node->id)
+				|| $this->isChildActive($node);
+	}
+
+	/**
+	 * Returns whether a child node of a specific page is active.
+	 * @param CmsNode $node the node
+	 * @return boolean the result
+	 */
+	protected function isChildActive($node)
+	{
+		foreach ($node->children as $child)
+			if ($this->isActive($child->name) || $this->isChildActive($child))
+				return true;
+
+		return false;
 	}
 
 	/**

@@ -32,12 +32,15 @@ class CmsBlock extends CWidget
             $model = $cms->loadNode($this->name);
         }
 
-		if ($model->content !== null && !empty($model->content->css))
-			$app->clientScript->registerCss($model->name.'#'.$this->getId(), $model->content->css);
+		// Ensure that we only render block-level nodes.
+		if ($model->published && $model->level === CmsNode::LEVEL_BLOCK) {
+			if ($model->content !== null && !empty($model->content->css))
+				$app->clientScript->registerCss($model->name.'#'.$this->getId(), $model->content->css);
 
-        $this->render('block', array(
-            'model'=>$model,
-            'content'=>$model->renderWidget(),
-        ));
+			$this->render('block', array(
+				'model'=>$model,
+				'content'=>$model->renderWidget(),
+			));
+		}
 	}
 }

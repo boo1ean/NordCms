@@ -15,27 +15,7 @@
 		</div>
     </div>
 
-	<?php echo $form->textAreaRow($model,'['.$model->locale.']css',array('class'=>'span11','rows'=>6)) ?>
-
-</fieldset>
-
-<fieldset class="form-page-settings">
-
-	<legend><?php echo Yii::t('CmsModule.core','Page settings') ?></legend>
-	
-	<p class="help-block"><?php echo Yii::t('CmsModule.core','Please note that the fields below are only used with pages.') ?></p>
-
-	<?php echo $form->textFieldRow($model,'['.$model->locale.']url',array('class'=>'span8')) ?>
-
-	<?php echo $form->textFieldRow($model,'['.$model->locale.']pageTitle',array('class'=>'span8')) ?>
-
-	<?php echo $form->textFieldRow($model,'['.$model->locale.']breadcrumb',array('class'=>'span8')) ?>
-
-    <?php echo $form->textFieldRow($model,'['.$model->locale.']metaTitle',array('class'=>'span8')) ?>
-
-    <?php echo $form->textAreaRow($model,'['.$model->locale.']metaDescription',array('class'=>'span8','rows'=>3)) ?>
-
-    <?php echo $form->textFieldRow($model,'['.$model->locale.']metaKeywords',array('class'=>'span8')) ?>
+	<?php echo $form->textAreaRow($model,'['.$model->locale.']css',array('class'=>'span8','rows'=>6)) ?>
 
 </fieldset>
 
@@ -66,7 +46,7 @@
 				'sortable'=>false,
 			),
             array(
-                'class'=>'CButtonColumn',
+                'class'=>'bootstrap.widgets.BootButtonColumn',
                 'template'=>'{delete}',
                 'buttons'=>array(
                     'delete'=>array(
@@ -80,3 +60,22 @@
     <?php echo $form->fileFieldRow($model,'['.$model->locale.']attachment') ?>
 
 </fieldset>
+
+<?php if ($node->level === CmsNode::LEVEL_PAGE): ?>
+
+	<fieldset class="form-page-settings">
+
+		<legend><?php echo Yii::t('CmsModule.core','Page settings') ?></legend>
+
+		<?php echo $form->textFieldRow($model,'['.$model->locale.']url',array('class'=>'span8')) ?>
+		<?php echo $form->textFieldRow($model,'['.$model->locale.']pageTitle',array('class'=>'span8')) ?>
+		<?php echo $form->textFieldRow($model,'['.$model->locale.']breadcrumb',array('class'=>'span8')) ?>
+		<?php echo $form->textFieldRow($model,'['.$model->locale.']metaTitle',array('class'=>'span8')) ?>
+		<?php echo $form->textAreaRow($model,'['.$model->locale.']metaDescription',array('class'=>'span8','rows'=>3)) ?>
+		<?php echo $form->textFieldRow($model,'['.$model->locale.']metaKeywords',array('class'=>'span8')) ?>
+
+		<p><?php echo CHtml::link(Yii::t('CmsModule.core','View page'), $node->getUrl(), array('class'=>'btn')); ?></p>
+
+	</fieldset>
+
+<?php endif; ?>

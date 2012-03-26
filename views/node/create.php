@@ -1,4 +1,7 @@
-<?php $this->breadcrumbs = array(Yii::t('CmsModule.core','Create node')) ?>
+<?php $this->breadcrumbs = array(
+	Yii::t('CmsModule.core','Cms')=>array('admin/index'),
+	Yii::t('CmsModule.core','Create node')
+) ?>
 
 <div class="node-create form">
 
@@ -19,6 +22,11 @@
 			<?php echo $form->label($model,'parentId') ?>
 			<?php echo $form->dropDownList($model,'parentId',$model->getParentOptionTree()) ?>
 			<?php echo $form->error($model,'parentId') ?>
+		</div>
+
+		<div class="row">
+			<?php echo $form->radioButtonList($model,'level',$model->getLevelOptions()) ?>
+			<?php echo $form->error($model,'level') ?>
 		</div>
 
 		<div class="row buttons">

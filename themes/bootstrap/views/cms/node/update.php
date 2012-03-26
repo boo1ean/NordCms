@@ -1,4 +1,8 @@
-<?php $this->breadcrumbs = CMap::mergeArray($model->getBreadcrumbs(true), array(Yii::t('CmsModule.core','Update'))) ?>
+<?php $this->breadcrumbs = array(
+	Yii::t('CmsModule.core', 'Cms')=>array('/cms'),
+	Yii::t('CmsModule.core', 'Nodes')=>array('/cms/node'),
+	ucfirst($model->name),
+) ?>
 
 <div class="node-update">
 
@@ -6,38 +10,39 @@
 
 	<?php $form = $this->beginWidget('BootActiveForm',array(
 		'id'=>'cmsUpdateNodeForm',
-		//'enableAjaxValidation'=>true,
-		'stacked'=>true,
 		'htmlOptions'=>array('enctype'=>'multipart/form-data'),
 	)) ?>
 
 		<fieldset class="form-node">
 
-			<?php echo $form->uneditableRow($model,'name',array('hint'=>Yii::t('CmsModule.core','Node name cannot be changed.'))) ?>
-
+			<?php echo $form->uneditableRow($model,'name') ?>
 			<?php echo $form->dropDownListRow($model,'parentId',$model->getParentOptionTree()) ?>
+			<?php echo $form->radioButtonListInlineRow($model,'level',$model->getLevelOptions()) ?>
+			<?php echo $form->checkBoxRow($model,'published') ?>
 
 		</fieldset>
 
 		<?php $tabs = array();
 		foreach ($translations as $locale => $content) {
 			$language = Yii::app()->cms->languages[$locale];
-			$tab = $this->renderPartial('_form',array(
+			$tabs[] = array('label'=>$language, 'content'=>$this->renderPartial('_form',array(
 				'model'=>$content,
 				'form'=>$form,
 				'node'=>$model,
 				'language'=>$language,
-			), true);
-			$tabs[$language] = $tab;
+			), true));
 		} ?>
 
-		<?php $this->widget('ext.bootstrap.widgets.BootTabs',array(
+		<?php $this->widget('bootstrap.widgets.BootTabbed',array(
 			'tabs'=>$tabs,
 		)); ?>
 
-		<div class="actions row">
+		<div class="form-actions row">
 			<div class="pull-left">
-				<?php echo CHtml::submitButton(Yii::t('CmsModule.core','Save'),array('class'=>'btn primary')) ?>
+				<?php echo CHtml::htmlButton(Yii::t('CmsModule.core','Save'),array(
+					'class'=>'btn btn-primary',
+					'type'=>'submit',
+				)) ?>
 			</div>
 			<div class="pull-right">
 				<?php echo CHtml::link(Yii::t('CmsModule.core','Delete'),array('delete','id'=>$model->id),array(

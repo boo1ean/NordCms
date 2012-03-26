@@ -59,7 +59,8 @@ class CmsContent extends CmsActiveRecord
 			array('locale', 'length', 'max'=>50),
 			array('heading, url, pageTitle, breadcrumb, metaTitle, metaDescription, metaKeywords', 'length', 'max'=>255),
             array('attachment', 'file', 'types'=>Yii::app()->cms->allowedFileTypes, 'maxSize'=>Yii::app()->cms->allowedFileSize, 'allowEmpty'=>true),
-			array('body, css', 'filter', 'filter'=>array($this->getPurifier(), 'purify')),
+			array('body', 'safe'),
+			//array('body, css', 'filter', 'filter'=>array($this->getPurifier(), 'purify')),
 			array('id, nodeId, locale, heading, url, pageTitle, breadcrumb, metaTitle, metaDescription, metaKeywords', 'safe', 'on'=>'search'),
 		);
 	}
@@ -70,7 +71,7 @@ class CmsContent extends CmsActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => Yii::t('CmsModule.core', 'Id'),
+			'id' => '#',
 			'nodeId' => Yii::t('CmsModule.core', 'Node'),
 			'locale' => Yii::t('CmsModule.core', 'Locale'),
 			'heading' => Yii::t('CmsModule.core', 'Heading'),

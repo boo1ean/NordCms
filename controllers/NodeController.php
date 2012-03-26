@@ -6,16 +6,18 @@
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @package cms.controllers
  */
+
 class NodeController extends CmsController
 {
+	/**
+	 * @property string the default layout for the controller view
+	 */
+	public $layout = 'cms-column2';
+
 	/**
 	 * @property string the name of the default action
 	 */
 	public $defaultAction = 'view';
-	/**
-	 * @string string the layout to use with this controller
-	 */
-	public $layout = 'cms';
 
 	/**
 	 * @return array the action filters for this controller.
@@ -105,6 +107,18 @@ class NodeController extends CmsController
 		));
 	}
 
+	public function actionIndex()
+	{
+		$model = new CmsNode('search');
+		$model->unsetAttributes();  // clear any default values
+
+		$this->layout = 'cms-column1';
+
+		$this->render('index', array(
+			'model'=>$model,
+		));
+	}
+
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -177,7 +191,7 @@ class NodeController extends CmsController
 				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 		}
 		else
-			throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+			throw new CHttpException(400, Yii::t('CmsModule.core', 'Invalid request. Please do not repeat this request again.'));
 	}
 
 	/**
@@ -191,7 +205,7 @@ class NodeController extends CmsController
 		$model = CmsNode::model()->findByPk($id, 'deleted=0');
 
 		if ($model === null)
-			throw new CHttpException(404, 'The requested page does not exist.');
+			throw new CHttpException(404, Yii::t('CmsModule.core', 'The requested page does not exist.'));
 
 		return $model;
 	}

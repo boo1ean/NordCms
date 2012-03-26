@@ -1,4 +1,6 @@
-<?php $this->breadcrumbs = CMap::mergeArray($model->getBreadcrumbs(true), array(Yii::t('CmsModule.core','Update'))) ?>
+<?php $this->breadcrumbs = CMap::mergeArray($model->getBreadcrumbs(true), array(
+	Yii::t('CmsModule.core','Update'))
+) ?>
 
 <div class="node-update form">
 
@@ -21,6 +23,16 @@
 				<?php echo $form->label($model,'parentId') ?>
 				<?php echo $form->dropDownList($model,'parentId',$model->getParentOptionTree()) ?>
 				<?php echo $form->error($model,'parentId') ?>
+			</div>
+
+			<div class="row">
+				<?php echo $form->radioButtonList($model,'level',$model->getLevelOptions()) ?>
+				<?php echo $form->error($model,'level') ?>
+			</div>
+
+			<div class="row">
+				<?php echo $form->checkBox($model,'published') ?>
+				<?php echo $form->error($model,'published') ?>
 			</div>
 
 		</fieldset>

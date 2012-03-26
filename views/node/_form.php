@@ -28,51 +28,6 @@
 
 </fieldset>
 
-<fieldset class="form-page-settings">
-
-    <legend><?php echo Yii::t('CmsModule.core', 'Page settings') ?></legend>
-
-	<p class="hint"><?php echo Yii::t('CmsModule.core','Please note that the fields below are only used with pages.') ?></p>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'['.$model->locale.']url') ?>
-		<?php echo $form->textField($model,'['.$model->locale.']url') ?>
-		<?php echo $form->error($model,'['.$model->locale.']url') ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'['.$model->locale.']pageTitle') ?>
-		<?php echo $form->textField($model,'['.$model->locale.']pageTitle') ?>
-		<?php echo $form->error($model,'['.$model->locale.']pageTitle') ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'['.$model->locale.']breadcrumb') ?>
-		<?php echo $form->textField($model,'['.$model->locale.']breadcrumb') ?>
-		<?php echo $form->error($model,'['.$model->locale.']breadcrumb') ?>
-        <p class="hint"><?php echo Yii::t('CmsModule.core','The breadcrumb text for this node.') ?></p>
-	</div>
-
-    <div class="row">
-        <?php echo $form->labelEx($model,'['.$model->locale.']metaTitle') ?>
-        <?php echo $form->textField($model,'['.$model->locale.']metaTitle') ?>
-        <?php echo $form->error($model,'['.$model->locale.']metaTitle') ?>
-    </div>
-
-    <div class="row">
-        <?php echo $form->labelEx($model,'['.$model->locale.']metaDescription') ?>
-        <?php echo $form->textArea($model,'['.$model->locale.']metaDescription',array('rows'=>3)) ?>
-        <?php echo $form->error($model,'['.$model->locale.']metaDescription') ?>
-    </div>
-
-    <div class="row">
-        <?php echo $form->labelEx($model,'['.$model->locale.']metaKeywords') ?>
-        <?php echo $form->textField($model,'['.$model->locale.']metaKeywords') ?>
-        <?php echo $form->error($model,'['.$model->locale.']metaKeywords') ?>
-    </div>
-
-</fieldset>
-
 <fieldset class="form-attachments">
 
     <legend><?php echo Yii::t('CmsModule.core', 'Attachments') ?></legend>
@@ -118,3 +73,54 @@
     </div>
 
 </fieldset>
+
+<?php if ($node->level === CmsNode::LEVEL_PAGE): ?>
+
+	<fieldset class="form-page-settings">
+
+		<legend><?php echo Yii::t('CmsModule.core', 'Page settings') ?></legend>
+
+		<p class="hint"><?php echo Yii::t('CmsModule.core','Please note that the fields below are only used with pages.') ?></p>
+
+		<div class="row">
+			<?php echo $form->labelEx($model,'['.$model->locale.']url') ?>
+			<?php echo $form->textField($model,'['.$model->locale.']url') ?>
+			<?php echo $form->error($model,'['.$model->locale.']url') ?>
+		</div>
+
+		<div class="row">
+			<?php echo $form->labelEx($model,'['.$model->locale.']pageTitle') ?>
+			<?php echo $form->textField($model,'['.$model->locale.']pageTitle') ?>
+			<?php echo $form->error($model,'['.$model->locale.']pageTitle') ?>
+		</div>
+
+		<div class="row">
+			<?php echo $form->labelEx($model,'['.$model->locale.']breadcrumb') ?>
+			<?php echo $form->textField($model,'['.$model->locale.']breadcrumb') ?>
+			<?php echo $form->error($model,'['.$model->locale.']breadcrumb') ?>
+			<p class="hint"><?php echo Yii::t('CmsModule.core','The breadcrumb text for this node.') ?></p>
+		</div>
+
+		<div class="row">
+			<?php echo $form->labelEx($model,'['.$model->locale.']metaTitle') ?>
+			<?php echo $form->textField($model,'['.$model->locale.']metaTitle') ?>
+			<?php echo $form->error($model,'['.$model->locale.']metaTitle') ?>
+		</div>
+
+		<div class="row">
+			<?php echo $form->labelEx($model,'['.$model->locale.']metaDescription') ?>
+			<?php echo $form->textArea($model,'['.$model->locale.']metaDescription',array('rows'=>3)) ?>
+			<?php echo $form->error($model,'['.$model->locale.']metaDescription') ?>
+		</div>
+
+		<div class="row">
+			<?php echo $form->labelEx($model,'['.$model->locale.']metaKeywords') ?>
+			<?php echo $form->textField($model,'['.$model->locale.']metaKeywords') ?>
+			<?php echo $form->error($model,'['.$model->locale.']metaKeywords') ?>
+		</div>
+
+		<p><?php echo CHtml::link(Yii::t('CmsModule.core','View page'), $node->getUrl()); ?></p>
+
+	</fieldset>
+
+<?php endif; ?>
