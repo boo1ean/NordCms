@@ -59,7 +59,7 @@ class CmsMenu extends CmsActiveRecord
 	public function relations()
 	{
 		return array(
-			'items'=>array(self::HAS_MANY, 'CmsMenuItem', 'menuId'),
+			'items'=>array(self::HAS_MANY, 'CmsLink', 'menuId'),
 		);
 	}
 

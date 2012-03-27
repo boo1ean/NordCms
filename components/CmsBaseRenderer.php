@@ -148,7 +148,7 @@ class CmsBaseRenderer extends CComponent
 
 				/** @var CmsNode $node */
 				$node = $cms->loadNode($target);
-				$target = $node instanceof CmsNode ? $node->getUrl() : '#';
+				$target = $node !== null ? $node->getUrl() : '#';
 			}
 
 			$pairs[$matches[0][$index]] = $target;

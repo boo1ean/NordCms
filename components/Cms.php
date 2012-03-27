@@ -40,6 +40,10 @@ class Cms extends CApplicationComponent
 	 */
 	public $attachmentPath = '/files/cms/attachments/';
 	/**
+	 * @var array the flash message categories.
+	 */
+	public $flashes = array();
+	/**
 	 * @var string the template to use for node headings.
 	 */
 	public $headingTemplate = '<h1 class="heading">{heading}</h1>';
@@ -60,28 +64,22 @@ class Cms extends CApplicationComponent
 	 */
 	public $renderer = array('class'=>'cms.components.CmsBaseRenderer');
 	/**
+	 * @var boolean indicates whether to auto create nodes when they are requested.
+	 * Defaults to true.
+	 */
+	public $autoCreate = true;
+	/**
 	 * @var array the HTML purifier options.
 	 */
 	public $htmlPurifierOptions = array();
-	// todo: do something about the flash message categories, an array maybe instead of 4 properties?
-	/**
-	 * @var string the flash message error category.
-	 */
-	public $flashError = 'error';
-	/**
-	 * @var string the flash message info category.
-	 */
-	public $flashInfo = 'info';
-	/**
-	 * @var string the flash message success category.
-	 */
-	public $flashSuccess = 'success';
-	/**
-	 * @var string the flash message warning category.
-	 */
-	public $flashWarning = 'warning';
 
     protected $_assetsUrl;
+	protected $_flashCategories = array(
+		'error'=>'error',
+		'info'=>'info',
+		'success'=>'success',
+		'warning'=>'warning',
+	);
 
     /**
      * Initializes the component.
@@ -89,6 +87,8 @@ class Cms extends CApplicationComponent
     public function init()
     {
         parent::init();
+
+		$this->flashes = CMap::mergeArray($this->_flashCategories, $this->flashes);
 
 		// Create the renderer.
 		$this->renderer = Yii::createComponent($this->renderer);
@@ -141,28 +141,13 @@ class Cms extends CApplicationComponent
 	{
 		$node = CmsNode::model()->findByAttributes(array('name'=>$name));
 
-		if (!$node instanceof CmsNode)
+		if ($node === null)
 		{
 			$this->createNode($name);
 			$node = $this->loadNode($name);
 		}
 
 		return $node;
-	}
-
-	/**
-	 * Creates a new node model.
-	 * @param string $name the node name
-	 */
-	public function createNode($name)
-	{
-        // Validate the node name before creation.
-        if (preg_match('/^[\w\d\._-]+$/i', $name) === 0)
-            throw new CException(__CLASS__.': Failed to create node. Name "'.$name.'" is invalid.');
-
-		$node = new CmsNode();
-		$node->name = $name;
-		$node->save(false);
 	}
 
 	/**
@@ -194,6 +179,26 @@ class Cms extends CApplicationComponent
 				return true;
 
 		return false;
+	}
+
+	/**
+	 * Creates a new node model.
+	 * @param string $name the node name
+	 * @return boolean whether the node was created
+	 * @throws CException if the node could not be created
+	 */
+	protected function createNode($name)
+	{
+		if (!$this->autoCreate)
+			throw new CException(__CLASS__.': Failed to create node. Node creation is disabled.');
+
+		// Validate the node name before creation.
+		if (preg_match('/^[\w\d\._-]+$/i', $name) === 0)
+			throw new CException(__CLASS__.': Failed to create node. Name "'.$name.'" is invalid.');
+
+		$node = new CmsNode();
+		$node->name = $name;
+		return $node->save(false);
 	}
 
 	/**

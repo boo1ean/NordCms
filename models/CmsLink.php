@@ -18,12 +18,12 @@ Yii::import('cms.components.CmsActiveRecord');
  * @property string $label
  * @property string $url
  */
-class CmsMenuItem extends CmsActiveRecord
+class CmsLink extends CmsActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className the class name
-	 * @return CmsMenuItem the static model class
+	 * @return CmsLink the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

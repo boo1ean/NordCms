@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `cms_menu` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `cms_menu_item` (
+CREATE TABLE IF NOT EXISTS `cms_link` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `menuId` int(10) unsigned NOT NULL,
   `label` varchar(255) NOT NULL,
