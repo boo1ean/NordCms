@@ -33,7 +33,7 @@
 			), true));
 		} ?>
 
-		<?php $this->widget('bootstrap.widgets.BootTabbed',array(
+		<?php $this->widget('bootstrap.widgets.BootTabbable',array(
 			'tabs'=>$tabs,
 		)); ?>
 
