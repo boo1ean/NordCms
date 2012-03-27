@@ -64,10 +64,6 @@ class Cms extends CApplicationComponent
 	 */
 	public $renderer = array('class'=>'cms.components.CmsBaseRenderer');
 	/**
-	// todo: do something about the flash message categories, an array maybe instead of 4 properties?
-	 */
-	public $renderer = array('class'=>'cms.components.CmsBaseRenderer');
-	/**
 	 * @var boolean indicates whether to auto create nodes when they are requested.
 	 * Defaults to true.
 	 */
@@ -196,20 +192,6 @@ class Cms extends CApplicationComponent
 		$node = new CmsNode();
 		$node->name = $name;
 		return $node->save(false);
-	}
-
-	/**
-	 * Returns whether a child node of a specific page is active.
-	 * @param CmsNode $node the node
-	 * @return boolean the result
-	 */
-	protected function isChildActive($node)
-	{
-		foreach ($node->children as $child)
-			if ($this->isActive($child->name) || $this->isChildActive($child))
-				return true;
-
-		return false;
 	}
 	
 	/**

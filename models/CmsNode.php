@@ -447,27 +447,4 @@ class CmsNode extends CmsActiveRecord
 	{
 		return (bool) $this->published;
 	}
-
-	/**
-	 * Renders this node.
-	 * @return string the rendered node
-	 */
-	public function render()
-	{
-		return Yii::app()->cms->renderer->render($this);
-	}
-
-	/**
-	 * Renders this node as a widget.
-	 * @return string the rendered widget
-	 */
-	public function renderWidget()
-	{
-		return Yii::app()->cms->renderer->renderWidget($this);
-	}
-
-	public function getPublished()
-	{
-		return (bool) $this->published;
-	}
 }
