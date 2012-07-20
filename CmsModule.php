@@ -23,6 +23,7 @@ class CmsModule extends CWebModule
 		$this->setImport(array(
 			'cms.components.*',
 			'cms.models.*',
+      'ext.bootstrap.widgets.*'
 		));
 	}
 
